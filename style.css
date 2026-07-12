@@ -1,9 +1,10 @@
 :root {
-    --color-green-dark: #19432b;
-    --color-green-darker: #153924;
-    --color-cream: #f9efeb;
-    --color-orange: #f37920;
-    --font-main: 'Plus Jakarta Sans', sans-serif;
+    --color-green-dark: #124634;
+    --color-green-darker: #0d3225;
+    --color-cream: #FFF3E2;
+    --color-orange: #F07F29;
+    --font-heading: 'Adapter Arabic Display TRIAL', 'Adapter Arabic Display', sans-serif;
+    --font-body: 'Early Sans Variable', sans-serif;
 }
 
 * {
@@ -13,33 +14,35 @@
 }
 
 body {
-    font-family: var(--font-main);
+    font-family: var(--font-body);
     background-color: var(--color-cream);
     color: var(--color-green-dark);
     -webkit-font-smoothing: antialiased;
     overflow-x: hidden;
 }
 
+/* Layout */
 .layout {
     display: flex;
-    min-height: 100vh;
+    height: 100vh;
+    width: 100vw;
 }
 
-/* Sidebar with slanted right edge */
+/* Sidebar */
 .sidebar {
-    width: 38%; 
+    width: 38%;
     background-color: var(--color-green-dark);
     color: var(--color-cream);
+    padding: 4rem 3rem 4rem 4rem;
     height: 100vh;
     position: fixed; 
     top: 0;
     left: 0;
+    z-index: 20;
+    clip-path: polygon(0 0, 100% 0, 75% 100%, 0 100%);
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    padding: 4rem 3rem;
-    z-index: 20; /* High z-index so nothing goes over it */
-    clip-path: polygon(0 0, 100% 0, 75% 100%, 0 100%);
 }
 
 .logo img { max-width: 150px; height: auto; }
@@ -54,8 +57,11 @@ body {
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
-    font-size: 1.1rem;
-    font-weight: 500;
+    font-family: var(--font-body);
+    font-size: 18px;
+    font-weight: 300;
+    line-height: 16px;
+    text-transform: capitalize;
 }
 
 .social-links a {
@@ -71,9 +77,10 @@ body {
 }
 
 .footer-text {
-    font-weight: 700;
-    font-size: 1.1rem;
-    line-height: 1.2;
+    font-family: var(--font-heading);
+    font-size: 19px;
+    font-weight: 800;
+    line-height: 19px;
     letter-spacing: 0.5px;
 }
 
@@ -101,6 +108,7 @@ body {
     top: 4rem;
     right: 4rem;
     text-align: right;
+    font-family: var(--font-heading);
     font-weight: 800;
     font-size: 1.1rem;
     line-height: 1.3;
@@ -115,11 +123,13 @@ body {
 /* Text Stage */
 .text-stage {
     position: absolute;
-    top: 25%;
+    top: 15%;
     left: 10%;
-    width: 75%;
-    height: 50%;
-    z-index: 2; /* Text below video */
+    width: 80%;
+    height: 40%;
+    z-index: 2;
+    display: flex;
+    align-items: center;
 }
 
 .text-slide {
@@ -127,33 +137,40 @@ body {
     top: 0;
     left: 0;
     width: 100%;
-    opacity: 0; /* Hidden by default, GSAP will control */
-    font-size: 1.35rem;
-    line-height: 1.6;
-    font-weight: 500;
-    visibility: hidden; /* Hide to prevent clicking when opacity is 0 */
+    opacity: 0;
+    font-size: 18px;
+    line-height: 1;
+    font-weight: 400;
+    visibility: hidden;
 }
 
 .text-slide h2 {
-    font-size: 2.5rem;
+    font-family: var(--font-heading);
+    font-size: 32px;
     font-weight: 700;
+    line-height: 1;
     margin-bottom: 1.5rem;
 }
-.text-slide p { margin-bottom: 2rem; }
+.text-slide p { margin-bottom: 1.5rem; }
 
 /* Video Stage */
 .video-stage {
     position: absolute;
-    bottom: -2%; /* Slightly push down */
+    bottom: 0;
     left: 5%;
-    width: 90%; /* Wide video covering most of block */
-    z-index: 3; /* Video over text */
+    width: 90%;
+    height: 45%; /* Keep video restricted to bottom 45% */
+    z-index: 3;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
 }
 
 .video-stage video {
     width: 100%;
-    height: auto;
-    mix-blend-mode: multiply; /* Blends white background into cream */
+    height: 100%;
+    object-fit: contain; /* Ensure it scales within the 45% height without distorting */
+    mix-blend-mode: multiply;
 }
 
 /* Scroll Track */
@@ -179,6 +196,7 @@ body {
 }
 
 .form-section h2 {
+    font-family: var(--font-heading);
     font-size: 3.5rem;
     line-height: 1.1;
     margin-bottom: 3rem;
