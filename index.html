@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ORIA - Landing Page</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <img src="./src/logo_Oria.svg" alt="ORIA Logo">
+            </div>
+            <div class="sidebar-bottom">
+                <div class="social-links">
+                    <a href="#">Instagram</a>
+                    <a href="#">LinkedIn</a>
+                    <a href="#">¿Un Café Sin Prisas?</a>
+                </div>
+                <div class="footer-text">
+                    CONSULTORÍA<br>
+                    RELEVO<br>
+                    GENERACIONAL
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="content">
+            <!-- Fixed Visuals that stay on screen during the text scroll -->
+            <div class="fixed-visuals">
+                <div class="top-badge">
+                    ORDENAMOS EL<br>PRESENTE PARA<br><span>ESCRIBIR EL FUTURO</span>
+                </div>
+
+                <!-- Text Stage: holds all the text blocks layered on top of each other -->
+                <div class="text-stage">
+                    <div class="text-slide" id="slide-1">
+                        <h2 class="orange">Hola.</h2>
+                        <p>Gracias por llegar hasta aquí. Eso significa que alguno de las semillas que hemos ido dejando ha brotado o que alguien ha tenido el bonito gesto de recomendarte.</p>
+                    </div>
+
+                    <div class="text-slide" id="slide-2">
+                        <h2 class="orange">ORIA</h2>
+                        <p>es una consultoría dedicada a echar una mano en procesos de relevo generacional y evolución organizativa. Aunque, siendo sinceros, nos cuesta un poco llamarnos "consultores", porque la palabra suele sonar a despacho bonito con vistas al centro. Nosotros venimos de ver las naves del polígono de San Ginés por la ventana del furgón.</p>
+                    </div>
+
+                    <div class="text-slide" id="slide-3">
+                        <p>Liderar equipos en los que conviven varias generaciones es cada vez más difícil. Y eso está provocando que atraer, desarrollar y retener talento se haya convertido en uno de los grandes problemas de las empresas, especialmente con las personas que liderarán el futuro. Sabemos lo que supone dedicar mucho tiempo a encontrar o formar a la persona adecuada o tener que depender de perfiles que frenan la competitividad de la empresa porque no hay una alternativa mejor.</p>
+                        <p><span class="orange">En ORIA vamos la raíz del problema,</span> deshaciendo ese nudo que dificulta el entendimiento entre generaciones. Después, rediseñamos y acompañamos a la organización para que el talento pase de ser un dolor de cabeza, a ser el motor de crecimiento de los próximos años. Trabajamos en convertir la mayor amenaza de nuestros días en ventaja competitiva, sin perder la esencia que hizo crecer la empresa.</p>
+                    </div>
+
+                    <div class="text-slide" id="slide-4">
+                        <p>Cada vez resulta más difícil incorporar a las nuevas generaciones a las organizaciones y que asuman posiciones de liderazgo. Algunas empresas han entendido que las reglas han cambiado y están adaptándose para atraer, desarrollar y aprovechar todo el potencial de quienes liderarán el corto plazo.</p>
+                        <p>En ORIA ayudamos a esas organizaciones a entender qué ha cambiado y a rediseñar aquellos aspectos que dificultan la incorporación, el desarrollo y la toma de responsabilidades por parte de las nuevas generaciones. <span class="orange underline">Trabajamos en convertir la mayor amenaza de nuestros días en ventaja competitiva, sin perder la esencia que hizo crecer la empresa.</span></p>
+                    </div>
+
+                    <div class="text-slide" id="slide-5">
+                        <p>Para ello, disponemos de una caja de herramientas variada que combina formación, investigación y algo difícil de enseñar en un aula: la presión en casa de haber tenido que levantar la persiana cada día entre varias generaciones. ORIA es nuestra forma de ganarnos la vida, sí, pero también nuestro granito de arena para que muchas historias empresariales sigan escribiéndose. Cuando una organización no encuentra relevo, peligra un legado construido durante años: una forma de hacer las cosas, una cultura, unos valores y una identidad que no se refleja en una cuenta de resultados.</p>
+                        <p>Así que, <span class="orange underline">si sientes que vuestro negocio está en uno de esos momentos donde toca planificar el futuro, alinear generaciones y tomar ventaja mientras otros se quejan de que la gente no quiere trabajar, estaremos encantados de sentarnos a hablar contigo.</span></p>
+                    </div>
+                </div>
+
+                <!-- Video Stage: Wide video at the bottom -->
+                <div class="video-stage">
+                    <video src="./src/ORIA.mp4" autoplay loop muted playsinline></video>
+                </div>
+            </div>
+
+            <!-- Scroll Track: invisible divs that provide the scroll height for the animation -->
+            <div class="scroll-track">
+                <div class="track-step" id="step-1"></div>
+                <div class="track-step" id="step-2"></div>
+                <div class="track-step" id="step-3"></div>
+                <div class="track-step" id="step-4"></div>
+                <div class="track-step" id="step-5"></div>
+            </div>
+
+            <!-- Form Section: scrolls normally over the fixed visuals -->
+            <section class="form-section" id="form-section">
+                <h2 class="orange">PREPARANDO<br>LAS TAZAS...</h2>
+                
+                <form class="mad-libs-form" onsubmit="event.preventDefault();">
+                    <div class="form-line">
+                        ¡Hola! Me llamo <input type="text" placeholder="[ Tu nombre ]" class="inline-input"> y os escribo desde <input type="text" placeholder="[ Tu empresa ]" class="inline-input">
+                    </div>
+                    <div class="form-line">
+                        Me gustaría que nos tomáramos ese café para poder hablar sobre 
+                        <select class="inline-input select-input">
+                            <option disabled selected value="">[ Selecciona un tema ▼ ]</option>
+                            <option>Relevo generacional</option>
+                            <option>Atracción de talento</option>
+                            <option>Evolución organizativa</option>
+                            <option>Otro tema</option>
+                        </select>
+                    </div>
+                    <div class="form-line">
+                        Podéis responderme a <input type="email" placeholder="[ Tu email ]" class="inline-input"> o, si lo preferís, llamarme al <input type="tel" placeholder="[ Tu teléfono ]" class="inline-input">
+                    </div>
+                    
+                    <div class="form-footer">
+                        <div class="submit-area">
+                            <button type="submit" class="submit-btn">[ Solicitar café ]</button>
+                            <p class="disclaimer orange">Tranquilidad. Este primer<br>café invita la casa y no<br>compromete a nada.</p>
+                        </div>
+                        <div class="contact-person">
+                            <p class="name orange">Jorge Gómez Salmerón</p>
+                            <p class="role orange">FUNDADOR</p>
+                            <div class="details orange">
+                                <p>jorge@oriaestrategia.com</p>
+                                <p>639 477 188</p>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </section>
+        </main>
+    </div>
+
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
