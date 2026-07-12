@@ -9,108 +9,109 @@ sentences.forEach(sentence => {
     const text = sentence.textContent.trim();
     if (!text) return;
     
+    const hasUnderline = sentence.classList.contains('underline');
+    if (hasUnderline) {
+        sentence.style.textDecoration = 'none';
+        sentence.classList.remove('underline');
+    }
+    
     const words = text.split(/\s+/);
-    sentence.innerHTML = ''; // clear original text
+    sentence.innerHTML = ''; 
     
     words.forEach((word, idx) => {
         const wordSpan = document.createElement('span');
         wordSpan.className = 'word';
-        wordSpan.textContent = word;
+        // Append space directly to the word to keep underline continuous
+        wordSpan.textContent = word + (idx < words.length - 1 ? ' ' : '');
         wordSpan.style.display = 'inline-block';
-        wordSpan.style.opacity = '0'; // start completely hidden
-        wordSpan.style.transform = 'translateY(10px)';
+        wordSpan.style.whiteSpace = 'pre-wrap'; // Preserves the trailing space
+        wordSpan.style.opacity = '0'; 
+        wordSpan.style.transform = 'translateY(15px)';
         wordSpan.style.willChange = 'opacity, transform';
         
-        sentence.appendChild(wordSpan);
-        
-        if (idx < words.length - 1) {
-            sentence.appendChild(document.createTextNode(' '));
+        if (hasUnderline) {
+            wordSpan.style.textDecoration = 'underline';
+            wordSpan.style.textUnderlineOffset = '4px';
         }
+        
+        sentence.appendChild(wordSpan);
     });
 });
 
-slides.forEach((slide, i) => {
+// All slides are visible as containers, but words inside are opaque 0
+slides.forEach(slide => {
     slide.style.visibility = 'visible';
-    slide.style.opacity = i === 0 ? '1' : '0';
+    slide.style.opacity = '1'; 
 });
 
 // 2. Build Anime.js Master Timeline
-const tlDuration = 10000; 
+const tlDuration = 20000; // Increased virtual duration for better math
 const animeTl = anime.timeline({
     autoplay: false,
     duration: tlDuration,
     easing: 'linear'
 });
 
-const slideTime = tlDuration / slides.length; 
+const slideTime = tlDuration / slides.length; // 4000ms per slide
 
 slides.forEach((slide, index) => {
     const slideStartTime = index * slideTime;
     
-    // Fade in the current slide container
+    // Slide container fades (if not the first one)
     if (index > 0) {
-        animeTl.add({
-            targets: slide,
-            opacity: [0, 1],
-            duration: 200,
-            easing: 'linear'
-        }, slideStartTime);
-    }
-
-    // Fade out previous slide container
-    if (index > 0) {
+        // Fade out previous slide
         animeTl.add({
             targets: slides[index - 1],
             opacity: [1, 0],
-            duration: 200,
+            duration: 400,
             easing: 'linear'
-        }, slideStartTime - 100);
+        }, slideStartTime - 200);
+
+        // Fade in current slide
+        animeTl.add({
+            targets: slide,
+            opacity: [0, 1],
+            duration: 400,
+            easing: 'linear'
+        }, slideStartTime);
+    } else {
+        // First slide is already visible at opacity 1
+        slide.style.opacity = '1';
     }
     
     const slideSentences = Array.from(slide.querySelectorAll('.sentence'));
     if (slideSentences.length === 0) return;
     
-    const activeSlideTime = slideTime - 400; 
+    // CRITICAL FIX: Allocate a large portion of the slide's scroll time 
+    // strictly for PAUSiNG so the completed paragraph stays on screen longer.
+    const pauseTime = 1800; // 45% of the slide time is just resting
+    const activeSlideTime = slideTime - pauseTime - 400; // Time left for text revealing
     const sentenceTime = activeSlideTime / slideSentences.length;
     
     slideSentences.forEach((sentence, i) => {
         const words = sentence.querySelectorAll('.word');
         const sentenceStartTime = slideStartTime + 200 + (i * sentenceTime);
-        const isFirstSentence = (index === 0 && i === 0);
         
-        if (isFirstSentence) {
-            // First sentence is fully lit immediately
-            words.forEach(w => {
-                w.style.opacity = '1';
-                w.style.transform = 'translateY(0px)';
-            });
-        } else {
-            // Smoothly reveal words, and leave them illuminated
-            animeTl.add({
-                targets: words,
-                opacity: [0, 1],
-                translateY: [10, 0],
-                duration: 600, // slightly longer for elegance
-                delay: anime.stagger(30), 
-                easing: 'easeOutQuad'
-            }, sentenceStartTime);
-        }
-        
-        // Removed the dimming block: words now stay fully visible
+        // Smoothly reveal words, no dimming!
+        animeTl.add({
+            targets: words,
+            opacity: [0, 1],
+            translateY: [15, 0],
+            duration: 800, // smoother fade
+            delay: anime.stagger(40), // slightly more gap between words
+            easing: 'easeOutQuad'
+        }, sentenceStartTime);
     });
-    
-    // Removed the block that dims the last sentence at the end of the slide
 });
 
 // Fade out the very last slide before the form appears
 animeTl.add({
     targets: slides[slides.length - 1],
     opacity: [1, 0],
-    duration: 300,
+    duration: 600,
     easing: 'linear'
-}, tlDuration - 300);
+}, tlDuration - 600);
 
-// Initialize state
 animeTl.seek(0);
 
 // 3. Link Anime.js Timeline to GSAP ScrollTrigger
@@ -118,7 +119,7 @@ ScrollTrigger.create({
     trigger: scrollTrack,
     start: "top top",
     end: "bottom bottom",
-    scrub: 1.5, // Added a slight smooth scrub delay for extra elegance
+    scrub: 1.5,
     onUpdate: (self) => {
         animeTl.seek(animeTl.duration * self.progress);
     }

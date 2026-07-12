@@ -30,7 +30,7 @@ body {
 
 /* Sidebar */
 .sidebar {
-    width: 38%;
+    width: 30%;
     background-color: var(--color-green-dark);
     color: var(--color-cream);
     padding: 4rem 3rem 4rem 4rem;
@@ -87,16 +87,16 @@ body {
 .content {
     flex: 1;
     position: relative;
-    margin-left: 38%; /* Matches sidebar width */
-    width: 62%;
+    margin-left: 30%; /* Matches sidebar width */
+    width: 70%;
 }
 
 /* Fixed Visuals Container */
 .fixed-visuals {
     position: fixed;
     top: 0;
-    left: 38%;
-    width: 62%;
+    left: 30%;
+    width: 70%;
     height: 100vh;
     pointer-events: none; /* Let scroll pass through */
     z-index: 1;
@@ -122,7 +122,7 @@ body {
 /* Text Stage */
 .text-stage {
     position: absolute;
-    top: 15%;
+    top: 25%;
     left: 10%;
     width: 80%;
     height: 40%;
