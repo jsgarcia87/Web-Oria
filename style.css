@@ -137,8 +137,8 @@ body {
     left: 0;
     width: 100%;
     opacity: 0;
-    font-size: 18px;
-    line-height: 1;
+    font-size: 17px;
+    line-height: 1.6;
     font-weight: 400;
     visibility: hidden;
 }
@@ -148,6 +148,7 @@ body {
     font-size: 32px;
     font-weight: 700;
     line-height: 1;
+    letter-spacing: 0;
     margin-bottom: 1.5rem;
 }
 .text-slide p { margin-bottom: 1.5rem; }
@@ -177,7 +178,7 @@ body {
     position: relative;
     z-index: 5;
     width: 100%;
-    height: 800vh; /* Provides the total scroll distance for the entire text animation sequence */
+    height: 400vh; /* Reduced distance for faster, more fluid animation */
 }
 
 /* Form Section */
@@ -198,7 +199,7 @@ body {
 
 .form-line {
     font-size: 1.5rem;
-    font-weight: 500;
+    font-weight: 400;
     line-height: 2.2;
     margin-bottom: 2rem;
 }
@@ -206,24 +207,28 @@ body {
 .inline-input {
     background: transparent;
     border: none;
-    font-family: var(--font-main);
+    font-family: var(--font-body);
     font-size: 1.5rem;
-    font-weight: 500;
+    font-weight: 600;
     color: var(--color-green-dark);
     padding: 0;
     outline: none;
     width: auto;
     min-width: 150px;
     text-align: center;
+    field-sizing: content;
 }
 .inline-input::placeholder {
-    color: rgba(25, 67, 43, 0.4);
-    font-weight: 500;
+    color: var(--color-orange);
+    font-weight: 600;
+    opacity: 1;
 }
 .select-input {
     appearance: none;
     cursor: pointer;
-    color: rgba(25, 67, 43, 0.4);
+    color: var(--color-orange);
+    font-weight: 600;
+    font-family: var(--font-body);
 }
 .select-input:focus { color: var(--color-green-dark); }
 
