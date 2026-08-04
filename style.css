@@ -180,7 +180,7 @@ body {
     position: relative;
     z-index: 5;
     width: 100%;
-    height: 400vh; /* Reduced distance for faster, more fluid animation */
+    height: 850vh; /* Increased distance for comfortable reading and smooth transitions */
 }
 
 /* Form Section */

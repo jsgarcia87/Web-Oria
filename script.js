@@ -3,7 +3,7 @@ gsap.registerPlugin(ScrollTrigger);
 const slides = Array.from(document.querySelectorAll('.text-slide'));
 const scrollTrack = document.querySelector('.scroll-track');
 
-// All slides are visible as containers, but children inside are opaque 0
+// All slides are visible as containers, but children inside start ready for animation
 slides.forEach(slide => {
     slide.style.visibility = 'visible';
     slide.style.opacity = '1'; 
@@ -21,71 +21,73 @@ const slideTime = tlDuration / slides.length;
 
 slides.forEach((slide, index) => {
     const slideStartTime = index * slideTime;
+    const slideEndTime = (index + 1) * slideTime;
     
-    // Parallax movement for the entire slide
-    const startY = index === 0 ? 0 : 100;
-    const endY = -100;
+    // Smooth, subtle parallax movement for the entire slide (35px instead of 100px)
+    const startY = index === 0 ? 0 : 35;
+    const endY = -35;
     
     animeTl.add({
         targets: slide,
         translateY: [startY, endY],
         duration: slideTime,
-        easing: 'linear'
+        easing: 'easeInOutQuad'
     }, slideStartTime);
     
-    // Slide container fades (if not the first one)
-    if (index > 0) {
+    // Slide container fades
+    if (index === 0) {
+        // First slide fades out near the end of its window
         animeTl.add({
-            targets: slides[index - 1],
+            targets: slide,
             opacity: [1, 0],
-            duration: 600,
-            easing: 'linear'
-        }, slideStartTime - 600);
-
+            duration: 500,
+            easing: 'easeInOutQuad'
+        }, slideEndTime - 500);
+    } else {
+        // Subsequent slides fade in smoothly
         animeTl.add({
             targets: slide,
             opacity: [0, 1],
-            duration: 600,
-            easing: 'linear'
-        }, slideStartTime);
-    } else {
-        slide.style.opacity = '1';
+            duration: 500,
+            easing: 'easeInOutQuad'
+        }, slideStartTime - 250);
+
+        // Fade out before next slide, unless it is the very last slide
+        if (index < slides.length - 1) {
+            animeTl.add({
+                targets: slide,
+                opacity: [1, 0],
+                duration: 500,
+                easing: 'easeInOutQuad'
+            }, slideEndTime - 500);
+        }
     }
     
     const slideElements = Array.from(slide.querySelectorAll('h2, p'));
     if (slideElements.length === 0) return;
-    
-    const activeSlideTime = slideTime * 0.6; 
-    const elementTime = activeSlideTime / slideElements.length;
     
     slideElements.forEach((el, i) => {
         if (index === 0) {
             el.style.opacity = '1';
             el.style.transform = 'translateY(0)';
         } else {
-            const elementStartTime = slideStartTime + 400 + (i * elementTime);
+            // Text elements appear quickly at the beginning of the slide window
+            // so there is a long reading hold where 100% of the text is visible
+            const elementStartTime = slideStartTime + (i * 90);
             
             el.style.opacity = '0';
-            el.style.transform = 'translateY(20px)';
+            el.style.transform = 'translateY(18px)';
             
             animeTl.add({
                 targets: el,
                 opacity: [0, 1],
-                translateY: [20, 0],
-                duration: 1000, 
-                easing: 'easeOutQuad'
+                translateY: [18, 0],
+                duration: 450, 
+                easing: 'easeOutCubic'
             }, elementStartTime);
         }
     });
 });
-
-// Fade out the very last slide before the form appears
-animeTl.add({
-    targets: slides[slides.length - 1],
-    opacity: [1, 0],
-    duration: 600,
-    easing: 'linear'
-}, tlDuration - 600);
 
 animeTl.seek(0);
 
@@ -100,17 +102,36 @@ ScrollTrigger.create({
     }
 });
 
-// Video fade out logic
+// Smooth fade out for both text-stage and video-stage as form-section enters
+const textStage = document.querySelector('.text-stage');
 const videoStage = document.querySelector('.video-stage');
 const formSection = document.querySelector('.form-section');
 
-gsap.to(videoStage, {
+gsap.to([textStage, videoStage], {
     opacity: 0,
+    ease: "power2.inOut",
     scrollTrigger: {
         trigger: formSection,
-        start: "top bottom",
-        end: "top center",
+        start: "top 95%",
+        end: "top 45%",
         scrub: true
     }
 });
+
+// Smooth fade in and gentle upward slide for form-section as it enters
+gsap.fromTo(formSection, {
+    opacity: 0,
+    y: 50
+}, {
+    opacity: 1,
+    y: 0,
+    ease: "power2.out",
+    scrollTrigger: {
+        trigger: formSection,
+        start: "top 85%",
+        end: "top 30%",
+        scrub: true
+    }
+});
+
 
