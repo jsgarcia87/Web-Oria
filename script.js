@@ -112,24 +112,26 @@ gsap.to([textStage, videoStage], {
     ease: "power2.inOut",
     scrollTrigger: {
         trigger: formSection,
-        start: "top 95%",
-        end: "top 45%",
+        start: "top 100%",
+        end: "top 55%",
         scrub: true
     }
 });
 
-// Smooth fade in and gentle upward slide for form-section as it enters
-gsap.fromTo(formSection, {
+// Smooth staggered fade in and gentle upward slide for the contents of form-section
+const formElements = formSection.querySelectorAll('h2, .mad-libs-form, .form-footer');
+gsap.fromTo(formElements, {
     opacity: 0,
-    y: 50
+    y: 40
 }, {
     opacity: 1,
     y: 0,
+    stagger: 0.08,
     ease: "power2.out",
     scrollTrigger: {
         trigger: formSection,
-        start: "top 85%",
-        end: "top 30%",
+        start: "top 80%",
+        end: "top 25%",
         scrub: true
     }
 });

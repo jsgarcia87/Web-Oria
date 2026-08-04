@@ -124,11 +124,11 @@ body {
 /* Text Stage */
 .text-stage {
     position: absolute;
-    top: 25%;
+    top: 15%;
     left: 10%;
     width: 80%;
-    height: 40%;
-    z-index: 2;
+    height: 48%;
+    z-index: 10;
     display: flex;
     align-items: center;
 }
@@ -161,8 +161,8 @@ body {
     bottom: 0;
     left: 5%;
     width: 90%;
-    height: 45%; /* Keep video restricted to bottom 45% */
-    z-index: 3;
+    height: 38%; /* Keep video restricted to bottom 38% */
+    z-index: 2;
     display: flex;
     align-items: flex-end;
     justify-content: center;
@@ -303,16 +303,18 @@ body {
     .text-stage { 
         width: 90%; 
         left: 5%; 
-        top: 5%; 
-        height: 45%; 
+        top: 3%; 
+        height: 52%; 
         align-items: center; /* Center the text vertically as requested */
-        margin-top: 0; 
+        margin-top: 0;
+        z-index: 10;
     }
     .video-stage { 
         width: 90%; 
         left: 5%; 
         bottom: 2%; 
-        height: 45%; 
+        height: 38%;
+        z-index: 2;
     }
     
     .form-section {
