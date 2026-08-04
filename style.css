@@ -3,8 +3,9 @@
     --color-green-darker: #0d3225;
     --color-cream: #FFF3E2;
     --color-orange: #F07F29;
-    --font-heading: 'Adapter Arabic Display TRIAL', 'Adapter Arabic Display', sans-serif;
-    --font-body: 'Early Sans Variable', sans-serif;
+    --font-heading: "adapter-arabic-display", sans-serif;
+    --font-body: "adapter-arabic-display", sans-serif;
+    --font-main: "adapter-arabic-display", sans-serif;
 }
 
 * {
@@ -18,6 +19,7 @@ body {
     background-color: var(--color-cream);
     color: var(--color-green-dark);
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
     overflow-x: hidden;
 }
 
