@@ -1,139 +1,213 @@
 gsap.registerPlugin(ScrollTrigger);
+gsap.config({ nullTargetWarn: false });
 
+// ============== TEXT SPLITTING ==============
+function splitIntoWords(element) {
+    const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT, null);
+    const textNodes = [];
+    while (walker.nextNode()) textNodes.push(walker.currentNode);
+
+    textNodes.forEach(node => {
+        const words = node.textContent.split(/(\s+)/);
+        const fragment = document.createDocumentFragment();
+        words.forEach(word => {
+            if (/^\s+$/.test(word)) {
+                fragment.appendChild(document.createTextNode(word));
+            } else if (word) {
+                const wrapper = document.createElement('span');
+                wrapper.className = 'word-wrap';
+                const inner = document.createElement('span');
+                inner.className = 'word-inner';
+                inner.textContent = word;
+                wrapper.appendChild(inner);
+                fragment.appendChild(wrapper);
+            }
+        });
+        node.parentNode.replaceChild(fragment, node);
+    });
+}
+
+// ============== SCRAMBLE / DECODE EFFECT (pure rAF, no GSAP) ==============
+function scrambleText(wordElements, totalDuration) {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const getRandomChar = () => chars[Math.floor(Math.random() * chars.length)];
+    totalDuration = (totalDuration || 0.6) * 1000;
+
+    wordElements.forEach((word, i) => {
+        const original = word.textContent;
+        const letters = original.split('');
+        const delay = i * 60;
+
+        word.style.opacity = '0';
+
+        setTimeout(() => {
+            word.style.opacity = '1';
+            const startTime = performance.now();
+
+            const animate = () => {
+                const elapsed = performance.now() - startTime;
+                const progress = Math.min(elapsed / totalDuration, 1);
+
+                if (progress < 1) {
+                    word.textContent = letters.map((char, j) => {
+                        const threshold = (j / letters.length) * 0.5 + 0.4;
+                        return progress > threshold ? char : getRandomChar();
+                    }).join('');
+                    requestAnimationFrame(animate);
+                } else {
+                    word.textContent = original;
+                }
+            };
+            requestAnimationFrame(animate);
+        }, delay);
+    });
+}
+
+// ============== SETUP ==============
 const slides = Array.from(document.querySelectorAll('.text-slide'));
 const scrollTrack = document.querySelector('.scroll-track');
 
-// All slides are visible as containers, but children inside start ready for animation
 slides.forEach(slide => {
     slide.style.visibility = 'visible';
-    slide.style.opacity = '1'; 
+    slide.style.opacity = '1';
+    const textEls = slide.querySelectorAll('h2, p');
+    textEls.forEach(el => splitIntoWords(el));
 });
 
-// Build Anime.js Master Timeline
-const tlDuration = 10000; 
-const animeTl = anime.timeline({
-    autoplay: false,
-    duration: tlDuration,
-    easing: 'linear'
+const slideH2Words = slides.map(s => Array.from(s.querySelectorAll('h2 .word-inner')));
+const slidePWords = slides.map(s => Array.from(s.querySelectorAll('p .word-inner')));
+const slideAllWords = slides.map(s => Array.from(s.querySelectorAll('.word-inner')));
+
+// Initial state
+slides.forEach((slide, i) => {
+    if (i === 0) {
+        gsap.set(slideAllWords[i], { yPercent: 0 });
+    } else {
+        gsap.set(slide, { opacity: 0 });
+        if (slidePWords[i].length > 0) gsap.set(slidePWords[i], { yPercent: 110 });
+        if (slideH2Words[i].length > 0) gsap.set(slideH2Words[i], { yPercent: 110 });
+    }
 });
 
-const slideTime = tlDuration / slides.length; 
+// ============== MASTER TIMELINE (scroll-scrubbed) ==============
+const tl = gsap.timeline({
+    scrollTrigger: {
+        trigger: scrollTrack,
+        start: 'top top',
+        end: 'bottom bottom',
+        scrub: 1
+    }
+});
+
+const totalSlides = slides.length;
+const unit = 1;
 
 slides.forEach((slide, index) => {
-    const slideStartTime = index * slideTime;
-    const slideEndTime = (index + 1) * slideTime;
-    
-    // Smooth, subtle parallax movement for the entire slide (35px instead of 100px)
-    const startY = index === 0 ? 0 : 35;
-    const endY = -35;
-    
-    animeTl.add({
-        targets: slide,
-        translateY: [startY, endY],
-        duration: slideTime,
-        easing: 'easeInOutQuad'
-    }, slideStartTime);
-    
-    // Slide container fades
-    if (index === 0) {
-        // First slide fades out near the end of its window
-        animeTl.add({
-            targets: slide,
-            opacity: [1, 0],
-            duration: 500,
-            easing: 'easeInOutQuad'
-        }, slideEndTime - 500);
-    } else {
-        // Subsequent slides fade in smoothly
-        animeTl.add({
-            targets: slide,
-            opacity: [0, 1],
-            duration: 500,
-            easing: 'easeInOutQuad'
-        }, slideStartTime - 250);
+    const start = index * unit;
+    const allWords = slideAllWords[index];
+    const wordCount = allWords.length;
+    if (wordCount === 0) return;
+    const staggerSpread = Math.min(wordCount * 0.004, 0.18);
 
-        // Fade out before next slide, unless it is the very last slide
-        if (index < slides.length - 1) {
-            animeTl.add({
-                targets: slide,
-                opacity: [1, 0],
-                duration: 500,
-                easing: 'easeInOutQuad'
-            }, slideEndTime - 500);
+    if (index === 0) {
+        tl.fromTo(slide, { y: 0 }, { y: -25, duration: unit, ease: 'none' }, start);
+
+        tl.to(allWords, {
+            yPercent: -110,
+            stagger: { amount: staggerSpread },
+            duration: unit * 0.2,
+            ease: 'power2.in'
+        }, start + unit * 0.78);
+
+        tl.to(slide, { opacity: 0, duration: unit * 0.05 }, start + unit * 0.95);
+
+    } else {
+        // --- ENTRY ---
+        tl.to(slide, { opacity: 1, duration: unit * 0.01 }, start);
+
+        tl.to(allWords, {
+            yPercent: 0,
+            stagger: { amount: staggerSpread },
+            duration: unit * 0.12,
+            ease: 'power2.out'
+        }, start + unit * 0.02);
+
+        tl.fromTo(slide, { y: 25 }, {
+            y: -25, duration: unit, ease: 'none'
+        }, start);
+
+        // --- EXIT ---
+        if (index < totalSlides - 1) {
+            const exitStart = start + unit * 0.78;
+
+            tl.to(allWords, {
+                yPercent: -110,
+                stagger: { amount: staggerSpread },
+                duration: unit * 0.2,
+                ease: 'power2.in'
+            }, exitStart);
+
+            tl.to(slide, { opacity: 0, duration: unit * 0.05 }, exitStart + unit * 0.2);
         }
     }
-    
-    const slideElements = Array.from(slide.querySelectorAll('h2, p'));
-    if (slideElements.length === 0) return;
-    
-    slideElements.forEach((el, i) => {
-        if (index === 0) {
-            el.style.opacity = '1';
-            el.style.transform = 'translateY(0)';
-        } else {
-            // Text elements appear quickly at the beginning of the slide window
-            // so there is a long reading hold where 100% of the text is visible
-            const elementStartTime = slideStartTime + (i * 90);
-            
-            el.style.opacity = '0';
-            el.style.transform = 'translateY(18px)';
-            
-            animeTl.add({
-                targets: el,
-                opacity: [0, 1],
-                translateY: [18, 0],
-                duration: 450, 
-                easing: 'easeOutCubic'
-            }, elementStartTime);
+});
+
+// ============== SCRAMBLE TRIGGERS (time-based, fired once) ==============
+const scrambled = new Set();
+
+if (slideH2Words[0].length > 0) {
+    scrambled.add(0);
+    setTimeout(() => scrambleText(slideH2Words[0], 0.8), 400);
+}
+
+slides.forEach((slide, index) => {
+    if (index === 0 || slideH2Words[index].length === 0) return;
+
+    const triggerStart = (index / totalSlides) * 100;
+
+    ScrollTrigger.create({
+        trigger: scrollTrack,
+        start: `${triggerStart}% top`,
+        end: `${triggerStart + 5}% top`,
+        onEnter: () => {
+            if (scrambled.has(index)) return;
+            scrambled.add(index);
+            scrambleText(slideH2Words[index], 0.8);
+        },
+        onLeaveBack: () => {
+            scrambled.delete(index);
         }
     });
 });
 
-animeTl.seek(0);
-
-// Link Anime.js Timeline to GSAP ScrollTrigger
-ScrollTrigger.create({
-    trigger: scrollTrack,
-    start: "top top",
-    end: "bottom bottom",
-    scrub: 1,
-    onUpdate: (self) => {
-        animeTl.seek(animeTl.duration * self.progress);
-    }
-});
-
-// Smooth fade out for both text-stage and video-stage as form-section enters
+// ============== FORM SECTION TRANSITIONS ==============
 const textStage = document.querySelector('.text-stage');
 const videoStage = document.querySelector('.video-stage');
 const formSection = document.querySelector('.form-section');
 
 gsap.to([textStage, videoStage], {
     opacity: 0,
-    ease: "power2.inOut",
+    ease: 'power2.inOut',
     scrollTrigger: {
         trigger: formSection,
-        start: "top 100%",
-        end: "top 55%",
+        start: 'top 100%',
+        end: 'top 55%',
         scrub: true
     }
 });
 
-// Smooth staggered fade in and gentle upward slide for the contents of form-section
 const formElements = formSection.querySelectorAll('h2, .mad-libs-form, .form-footer');
-gsap.fromTo(formElements, {
-    opacity: 0,
-    y: 40
-}, {
-    opacity: 1,
-    y: 0,
-    stagger: 0.08,
-    ease: "power2.out",
-    scrollTrigger: {
-        trigger: formSection,
-        start: "top 80%",
-        end: "top 25%",
-        scrub: true
+gsap.fromTo(formElements,
+    { opacity: 0, y: 40 },
+    {
+        opacity: 1, y: 0,
+        stagger: 0.08,
+        ease: 'power2.out',
+        scrollTrigger: {
+            trigger: formSection,
+            start: 'top 80%',
+            end: 'top 25%',
+            scrub: true
+        }
     }
-});
-
-
+);

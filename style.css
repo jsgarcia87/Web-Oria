@@ -121,6 +121,19 @@ body {
 .orange { color: var(--color-orange); }
 .underline { text-decoration: underline; text-underline-offset: 4px; }
 
+/* Word-level animation wrappers */
+.word-wrap {
+    display: inline-block;
+    overflow: hidden;
+    vertical-align: bottom;
+    padding-bottom: 0.08em;
+    margin-bottom: -0.08em;
+}
+.word-inner {
+    display: inline-block;
+    will-change: transform;
+}
+
 /* Text Stage */
 .text-stage {
     position: absolute;
