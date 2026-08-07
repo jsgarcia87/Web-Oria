@@ -121,18 +121,6 @@ body {
 .orange { color: var(--color-orange); }
 .underline { text-decoration: underline; text-underline-offset: 4px; }
 
-/* Word-level animation wrappers */
-.word-wrap {
-    display: inline-block;
-    overflow: hidden;
-    vertical-align: bottom;
-    padding-bottom: 0.08em;
-    margin-bottom: -0.08em;
-}
-.word-inner {
-    display: inline-block;
-    will-change: transform;
-}
 
 /* Text Stage */
 .text-stage {
@@ -152,9 +140,10 @@ body {
     left: 0;
     width: 100%;
     opacity: 0;
-    font-size: 17px;
-    line-height: 1.6;
-    font-weight: 400;
+    font-size: 32px;
+    line-height: 1;
+    font-weight: 700;
+    letter-spacing: 0;
     visibility: hidden;
 }
 
@@ -367,7 +356,7 @@ body {
         margin-bottom: 1rem;
     }
     .text-slide p, .text-slide .sentence {
-        font-size: 16px;
+        font-size: 22px;
         margin-bottom: 1rem;
     }
     .text-stage {
