@@ -138,8 +138,8 @@ body {
 .text-stage {
     position: absolute;
     top: 22%;
-    left: 12%;
-    width: 76%;
+    left: 6%;
+    width: min(76%, calc(94% - 20rem));
     height: 42%;
     z-index: 10;
     display: flex;
