@@ -141,9 +141,9 @@ body {
     left: 0;
     width: 100%;
     opacity: 0;
-    font-size: 32px;
-    line-height: 1;
-    font-weight: 700;
+    font-size: 20px;
+    line-height: 1.5;
+    font-weight: 400;
     letter-spacing: 0;
     visibility: hidden;
 }
@@ -156,24 +156,37 @@ body {
     letter-spacing: 0;
     margin-bottom: 1.5rem;
 }
-.text-slide p { margin-bottom: 1.5rem; }
+.text-slide p { margin-bottom: 1rem; }
 
 /* Visual Stage */
 .visual-stage {
     position: absolute;
     bottom: 0;
-    right: 0;
-    width: 60%;
-    height: 55%;
+    right: 3%;
+    width: 55%;
+    height: 50%;
     z-index: 2;
     overflow: hidden;
 }
 
-.hero-photo {
+.hero-photo,
+.hero-video {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
+}
+
+.hero-photo {
     object-fit: cover;
     object-position: center 15%;
+}
+
+.hero-video {
+    object-fit: contain;
+    mix-blend-mode: multiply;
+    opacity: 0;
 }
 
 /* Scroll Track */
@@ -181,7 +194,7 @@ body {
     position: relative;
     z-index: 5;
     width: 100%;
-    height: 850vh; /* Increased distance for comfortable reading and smooth transitions */
+    height: 700vh;
 }
 
 /* Form Section */
@@ -352,12 +365,12 @@ body {
         padding: calc(110px + 5vh) 5% 10vh 5%;
     }
     .text-slide h2 {
-        font-size: 24px;
+        font-size: 28px;
         margin-bottom: 1rem;
     }
     .text-slide p, .text-slide .sentence {
-        font-size: 22px;
-        margin-bottom: 1rem;
+        font-size: 16px;
+        margin-bottom: 0.8rem;
     }
     .text-stage {
         top: 2%;
