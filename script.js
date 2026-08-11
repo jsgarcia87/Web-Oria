@@ -56,10 +56,10 @@ slides.forEach((slide, index) => {
 });
 
 const textStage = document.querySelector('.text-stage');
-const videoStage = document.querySelector('.video-stage');
+const visualStage = document.querySelector('.visual-stage');
 const formSection = document.querySelector('.form-section');
 
-gsap.to([textStage, videoStage], {
+gsap.to([textStage, visualStage], {
     opacity: 0,
     ease: 'power2.inOut',
     scrollTrigger: {
