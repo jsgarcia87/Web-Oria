@@ -28,7 +28,6 @@ slides.forEach((slide, index) => {
     const start = index * unit;
 
     if (index === 0) {
-        // First slide exits with crossfade into slide 2
         tl.to(slide, {
             opacity: 0,
             y: -30,
@@ -43,7 +42,6 @@ slides.forEach((slide, index) => {
             start - unit * 0.2
         );
 
-        // Exit: crossfade with next slide
         if (index < totalSlides - 1) {
             tl.to(slide, {
                 opacity: 0,
@@ -55,11 +53,28 @@ slides.forEach((slide, index) => {
     }
 });
 
+const heroPhoto = document.querySelector('.hero-photo');
+const heroVideo = document.querySelector('.hero-video');
+
+if (heroPhoto && heroVideo) {
+    tl.to(heroPhoto, {
+        opacity: 0,
+        duration: unit * 0.3,
+        ease: 'power2.inOut'
+    }, unit * 0.7);
+
+    tl.to(heroVideo, {
+        opacity: 1,
+        duration: unit * 0.3,
+        ease: 'power2.inOut'
+    }, unit * 0.7);
+}
+
 const textStage = document.querySelector('.text-stage');
-const videoStage = document.querySelector('.video-stage');
+const visualStage = document.querySelector('.visual-stage');
 const formSection = document.querySelector('.form-section');
 
-gsap.to([textStage, videoStage], {
+gsap.to([textStage, visualStage], {
     opacity: 0,
     ease: 'power2.inOut',
     scrollTrigger: {
