@@ -21,13 +21,13 @@ body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     overflow-x: hidden;
-    scroll-behavior: smooth;
 }
 
 /* Layout */
 .layout {
     display: flex;
     height: 100vh;
+    height: 100dvh;
     width: 100vw;
 }
 
@@ -38,6 +38,7 @@ body {
     color: var(--color-cream);
     padding: 4rem 3rem 4rem 4rem;
     height: 100vh;
+    height: 100dvh;
     position: fixed;
     top: 0;
     left: 0;
@@ -101,6 +102,7 @@ body {
     left: 38%;
     width: 62%;
     height: 100vh;
+    height: 100dvh;
     pointer-events: none;
     z-index: 1;
 }
@@ -229,7 +231,7 @@ body {
     color: var(--color-green-dark);
     padding: 0;
     outline: none;
-    width: auto;
+    width: 200px;
     min-width: 150px;
     text-align: center;
     field-sizing: content;
@@ -239,6 +241,10 @@ body {
     font-weight: 600;
     opacity: 1;
 }
+@supports (field-sizing: content) {
+    .inline-input { width: auto; }
+}
+
 .select-input {
     appearance: none;
     cursor: pointer;
@@ -274,17 +280,34 @@ body {
 .contact-person .role { font-weight: 700; font-size: 0.9rem; margin-bottom: 1rem; }
 .contact-person .details { font-weight: 500; font-size: 1.1rem; }
 
-/* Responsiveness */
+/* ─── Responsiveness ─── */
+
+/* Small desktops / large tablets landscape */
+@media (max-width: 1280px) {
+    .sidebar {
+        width: 34%;
+        padding: 3rem 2.5rem 3rem 3rem;
+    }
+    .logo img { max-width: 220px; }
+    .content { margin-left: 34%; width: 66%; }
+    .fixed-visuals { left: 34%; width: 66%; }
+    .text-stage { width: 80%; }
+    .top-badge { font-size: 1rem; right: 2.5rem; top: 3rem; }
+    .footer-text { font-size: 16px; line-height: 17px; }
+    .social-links { font-size: 16px; }
+}
+
+/* Tablet landscape – sidebar becomes horizontal header */
 @media (max-width: 1024px) {
     .layout { flex-direction: column; }
     .sidebar {
         width: 100%;
         max-width: none;
-        height: 100px; /* Fixed height */
-        position: fixed; 
+        height: 80px;
+        position: fixed;
         top: 0;
         left: 0;
-        padding: 1rem 2rem;
+        padding: 0 2rem;
         flex-direction: row;
         align-items: center;
         justify-content: space-between;
@@ -292,106 +315,177 @@ body {
         z-index: 20;
         box-shadow: 0 4px 20px rgba(0,0,0,0.1);
     }
-    .footer-text { display: none; } /* Hide the big side text to free up header space */
-    .logo img {
-        max-width: 180px;
-    }
+    .footer-text { display: none; }
+    .logo img { max-width: 160px; }
     .social-links {
-        flex-direction: row; 
+        flex-direction: row;
         gap: 1.5rem;
         margin: 0;
         font-size: 15px;
     }
-    .content {
-        margin-left: 0;
-        width: 100%;
-    }
+    .content { margin-left: 0; width: 100%; }
     .fixed-visuals {
         left: 0;
         width: 100%;
-        height: calc(100vh - 100px); 
-        top: 100px; 
+        height: calc(100vh - 80px);
+        height: calc(100dvh - 80px);
+        top: 80px;
     }
-    .top-badge { display: none; } 
-    .text-stage { 
-        width: 90%; 
-        left: 5%; 
-        top: 3%; 
-        height: 52%; 
-        align-items: center; /* Center the text vertically as requested */
-        margin-top: 0;
-        z-index: 10;
+    .top-badge { display: none; }
+    .text-stage {
+        width: 55%;
+        left: 5%;
+        top: 5%;
+        height: 60%;
+        align-items: flex-start;
     }
+    .text-slide { font-size: 18px; line-height: 1.5; }
+    .text-slide h2 { font-size: 34px; }
     .visual-stage {
-        width: 90%;
+        width: 42%;
         left: auto;
-        right: 0;
-        bottom: 0;
-        height: 45%;
-        z-index: 2;
+        right: 2%;
+        bottom: 2%;
+        height: 55%;
     }
-    
-    .form-section {
-        padding: calc(100px + 5vh) 10% 10vh 10%; 
-    }
-    .form-line { line-height: 2.8; }
-    .inline-input { font-size: 1.3rem; min-width: 150px; }
-    .form-footer { flex-direction: column; gap: 3rem; }
+    .form-section { padding: calc(80px + 5vh) 8% 8vh 8%; }
+    .form-line { line-height: 2.4; }
+    .inline-input { font-size: 1.3rem; min-width: 140px; }
+    .form-footer { flex-direction: column; gap: 2.5rem; }
 }
 
+/* Tablet portrait */
 @media (max-width: 768px) {
     .sidebar {
-        padding: 1rem;
-        height: 110px; /* Taller to fit stacked layout */
-        flex-direction: column; /* Stack logo and links vertically */
-        justify-content: center;
-        gap: 0.8rem;
+        height: 70px;
+        padding: 0 1.5rem;
     }
-    .logo img {
-        max-width: 150px;
-    }
+    .logo img { max-width: 130px; }
     .social-links {
         font-size: 13px;
         gap: 1rem;
-        width: 100%;
-        justify-content: center; /* Center the links */
-        flex-wrap: wrap; /* Let them wrap if screen is very narrow */
     }
+    .social-links .cafe-link { display: none; }
     .fixed-visuals {
-        height: calc(100vh - 110px);
-        top: 110px; /* Offset to match the taller header */
-    }
-    .form-section {
-        padding: calc(110px + 5vh) 5% 10vh 5%;
-    }
-    .text-slide h2 {
-        font-size: 28px;
-        margin-bottom: 1rem;
-    }
-    .text-slide p, .text-slide .sentence {
-        font-size: 16px;
-        margin-bottom: 0.8rem;
+        height: calc(100vh - 70px);
+        height: calc(100dvh - 70px);
+        top: 70px;
     }
     .text-stage {
-        top: 2%;
+        width: 92%;
+        left: 4%;
+        top: 3%;
+        height: 48%;
+        align-items: flex-start;
     }
-    .form-section h2 {
-        font-size: 2.2rem;
-        margin-bottom: 2rem;
+    .text-slide h2 { font-size: 28px; margin-bottom: 1rem; }
+    .text-slide p, .text-slide .sentence { font-size: 15px; }
+    .text-slide { line-height: 1.45; }
+    .visual-stage {
+        width: 60%;
+        right: 0;
+        bottom: 0;
+        height: 48%;
     }
-    .form-line { 
-        font-size: 1.2rem;
-        line-height: 2; 
+    .form-section {
+        padding: calc(70px + 4vh) 6% 8vh 6%;
     }
-    .inline-input { 
-        font-size: 1.2rem; 
-        min-width: 100px; 
-        width: 100%; 
-        margin-top: 0.5rem;
+    .form-section h2 { font-size: 2.2rem; margin-bottom: 2rem; }
+    .form-line { font-size: 1.15rem; line-height: 2; margin-bottom: 1.5rem; }
+    .inline-input {
+        font-size: 1.15rem;
+        min-width: 100px;
+        width: 100%;
+        margin-top: 0.3rem;
         border-bottom: 1px solid var(--color-green-dark);
         border-radius: 0;
     }
-    .submit-btn {
-        font-size: 1.5rem;
+    .select-input { width: 100%; margin-top: 0.3rem; }
+    .submit-btn { font-size: 1.4rem; }
+    .disclaimer { font-size: 1rem; }
+    .contact-person .name { font-size: 1.1rem; }
+    .contact-person .details { font-size: 1rem; }
+}
+
+/* Large phones */
+@media (max-width: 480px) {
+    .sidebar {
+        height: 60px;
+        padding: 0 1rem;
     }
+    .logo img { max-width: 110px; }
+    .social-links { font-size: 12px; gap: 0.8rem; }
+    .fixed-visuals {
+        height: calc(100vh - 60px);
+        height: calc(100dvh - 60px);
+        top: 60px;
+    }
+    .text-stage {
+        width: 92%;
+        left: 4%;
+        top: 2%;
+        height: 52%;
+    }
+    .text-slide h2 { font-size: 24px; margin-bottom: 0.8rem; }
+    .text-slide p, .text-slide .sentence { font-size: 14px; }
+    .text-slide { line-height: 1.4; }
+    .visual-stage {
+        width: 70%;
+        right: 0;
+        bottom: 0;
+        height: 42%;
+    }
+    .form-section {
+        padding: calc(60px + 3vh) 5% 6vh 5%;
+    }
+    .form-section h2 { font-size: 1.8rem; margin-bottom: 1.5rem; }
+    .form-line { font-size: 1.05rem; line-height: 1.9; margin-bottom: 1.2rem; }
+    .inline-input { font-size: 1.05rem; min-width: 80px; }
+    .submit-btn { font-size: 1.3rem; }
+    .disclaimer { font-size: 0.9rem; }
+    .form-footer { gap: 2rem; margin-top: 2.5rem; }
+}
+
+/* Small phones */
+@media (max-width: 360px) {
+    .logo img { max-width: 90px; }
+    .social-links { font-size: 11px; gap: 0.6rem; }
+    .text-slide h2 { font-size: 22px; }
+    .text-slide p, .text-slide .sentence { font-size: 13px; }
+    .visual-stage { width: 75%; height: 38%; }
+    .form-section h2 { font-size: 1.6rem; }
+    .form-line { font-size: 1rem; }
+    .inline-input { font-size: 1rem; min-width: 70px; }
+    .submit-btn { font-size: 1.2rem; }
+}
+
+/* Landscape orientation on mobile/tablets – short viewport */
+@media (max-height: 500px) and (orientation: landscape) {
+    .sidebar { height: 50px; padding: 0 1.5rem; }
+    .logo img { max-width: 100px; }
+    .social-links { font-size: 12px; gap: 0.8rem; }
+    .fixed-visuals {
+        height: calc(100vh - 50px);
+        height: calc(100dvh - 50px);
+        top: 50px;
+    }
+    .text-stage {
+        width: 55%;
+        left: 3%;
+        top: 2%;
+        height: 90%;
+    }
+    .text-slide h2 { font-size: 22px; margin-bottom: 0.5rem; }
+    .text-slide p, .text-slide .sentence { font-size: 13px; }
+    .text-slide { line-height: 1.35; }
+    .visual-stage {
+        width: 40%;
+        right: 1%;
+        height: 90%;
+        bottom: 0;
+    }
+    .form-section {
+        padding: calc(50px + 2vh) 5% 4vh 5%;
+    }
+    .form-section h2 { font-size: 1.6rem; }
 }
