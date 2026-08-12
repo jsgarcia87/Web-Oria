@@ -182,7 +182,7 @@ body {
 
 .hero-photo {
     object-fit: cover;
-    object-position: center 15%;
+    object-position: center 20%;
 }
 
 .hero-video {
@@ -387,6 +387,7 @@ body {
         bottom: 0;
         height: 48%;
     }
+    .hero-photo { object-position: center 25%; }
     .form-section {
         padding: calc(70px + 4vh) 6% 8vh 6%;
     }
@@ -399,8 +400,9 @@ body {
         margin-top: 0.3rem;
         border-bottom: 1px solid var(--color-green-dark);
         border-radius: 0;
+        text-align: left;
     }
-    .select-input { width: 100%; margin-top: 0.3rem; }
+    .select-input { width: 100%; margin-top: 0.3rem; text-align: left; }
     .submit-btn { font-size: 1.4rem; }
     .disclaimer { font-size: 1rem; }
     .contact-person .name { font-size: 1.1rem; }
@@ -435,6 +437,7 @@ body {
         bottom: 0;
         height: 42%;
     }
+    .hero-photo { object-position: 60% 25%; }
     .form-section {
         padding: calc(60px + 3vh) 5% 6vh 5%;
     }
