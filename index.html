@@ -3,123 +3,208 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ORIA - Landing Page</title>
+    <title>ORIA | Consultoría en Relevo Generacional y Empresa Familiar</title>
+    <meta name="description" content="Consultoría especializada en relevo generacional y evolución organizativa en empresas familiares. Comunicación, gobierno, sucesión y transformación organizativa.">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://oriaestrategia.com/">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="es_ES">
+    <meta property="og:title" content="ORIA | Consultoría en Relevo Generacional y Empresa Familiar">
+    <meta property="og:description" content="Consultoría especializada en relevo generacional y evolución organizativa en empresas familiares. Comunicación, gobierno, sucesión y transformación organizativa.">
+    <meta property="og:url" content="https://oriaestrategia.com/">
+    <meta property="og:site_name" content="ORIA Estrategia">
+    <meta property="og:image" content="https://oriaestrategia.com/src/foto_portada_oria.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="ORIA | Consultoría en Relevo Generacional y Empresa Familiar">
+    <meta name="twitter:description" content="Consultoría especializada en relevo generacional y evolución organizativa en empresas familiares.">
+    <meta name="twitter:image" content="https://oriaestrategia.com/src/foto_portada_oria.jpg">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="./src/logo_Oria.svg">
+    <link rel="apple-touch-icon" href="./src/logo_Oria.svg">
+
+    <!-- Preconnect -->
+    <link rel="preconnect" href="https://use.typekit.net" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+
+    <!-- Microsoft Clarity -->
+    <script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "y4bjqj0rzj");
+    </script>
+
     <!-- Adobe Fonts -->
     <link rel="stylesheet" href="https://use.typekit.net/vhg4tox.css">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/style.css?t=105">
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "ProfessionalService",
+        "name": "ORIA",
+        "url": "https://oriaestrategia.com",
+        "logo": "https://oriaestrategia.com/src/logo_Oria.svg",
+        "image": "https://oriaestrategia.com/src/foto_portada_oria.jpg",
+        "description": "Consultoría especializada en relevo generacional y evolución organizativa en empresas familiares.",
+        "founder": {
+            "@type": "Person",
+            "name": "Jorge Gómez Salmerón",
+            "jobTitle": "Fundador",
+            "email": "jorge@oriaestrategia.com",
+            "telephone": "+34614694327"
+        },
+        "contactPoint": {
+            "@type": "ContactPoint",
+            "telephone": "+34614694327",
+            "email": "jorge@oriaestrategia.com",
+            "contactType": "customer service",
+            "availableLanguage": "Spanish"
+        },
+        "areaServed": {
+            "@type": "Country",
+            "name": "España"
+        },
+        "serviceType": ["Relevo generacional", "Profesionalización órganos de gobierno", "Conflictos empresa-familia", "Atracción de talento", "Consultoría empresa familiar"],
+        "sameAs": ["https://www.linkedin.com/in/jorgegomezsalmeron/"]
+    }
+    </script>
 </head>
 <body>
     <div class="layout">
         <!-- Sidebar -->
         <aside class="sidebar">
             <div class="logo">
-                <img src="./src/logo_Oria.svg" alt="ORIA Logo">
+                <a href="/" aria-label="ORIA - Inicio">
+                    <img src="./src/logo_Oria.svg" alt="ORIA - Consultoría de Relevo Generacional" width="280" height="80">
+                </a>
             </div>
-            <div class="social-links">
-                <a href="#">Instagram</a>
-                <a href="#">LinkedIn</a>
+            
+            <button class="hamburger-btn" aria-label="Abrir menú" aria-expanded="false">
+                <span></span>
+                <span></span>
+            </button>
+            <nav class="social-links" aria-label="Navegación y contacto">
+                <a href="/" class="nav-active">Inicio</a>
+                <a href="trabajo.html">Así es como trabajo</a>
                 <a href="#form-section" class="cafe-link">¿Un Café Sin Prisas?</a>
-            </div>
+                <a href="https://www.instagram.com/oriaempresafamiliar/" target="_blank" rel="noopener noreferrer">Instagram</a>
+                <a href="https://www.linkedin.com/in/jorgegomezsalmeron/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+            </nav>
             <div class="footer-text">
                 CONSULTORÍA<br>
                 RELEVO<br>
                 GENERACIONAL
             </div>
+        
+            <div class="legal-menu">
+                <a href="aviso-legal.html">Aviso Legal</a>
+                <a href="politica-privacidad.html">Política de Privacidad</a>
+                <a href="politica-cookies.html">Política de Cookies</a>
+            </div>
         </aside>
 
         <!-- Main Content -->
         <main class="content">
+            <h1 class="sr-only">ORIA — Consultoría de Relevo Generacional y Evolución Organizativa en Empresas Familiares</h1>
             <!-- Badge: always visible -->
-            <div class="top-badge">
+            <div class="top-badge" aria-hidden="true">
                 ORDENAMOS EL<br>PRESENTE PARA<br><span>ESCRIBIR EL FUTURO</span>
             </div>
 
-            <!-- Fixed Visuals that stay on screen during the text scroll -->
-            <div class="fixed-visuals">
-                <!-- Text Stage: holds all the text blocks layered on top of each other -->
-                <div class="text-stage">
-                    <div class="text-slide" id="slide-1">
-                        <h2 class="orange sentence">Hola.</h2>
-                        <p>
-                            <span class="sentence">Gracias por llegar hasta aquí.</span>
-                            <span class="sentence">Eso significa que alguno de las semillas que hemos ido dejando ha brotado o que alguien ha tenido el bonito gesto de recomendarte.</span>
-                        </p>
-                    </div>
+            <section class="chapter" id="chapter-1">
+                <div class="chapter-text">
+                    <h2 class="orange">Hola.</h2>
+                    <p>No entiendo que hemos hecho mal en el mundillo de la empresa familiar para que nos vean como anticuados, conflictivos o poco profesionales...</p>
+                </div>
+                <div class="chapter-visual">
+                    <img src="./src/foto_portada_oria.jpg" alt="Jorge Gómez Salmerón - Fundador de ORIA" class="chapter-media" data-parallax="0.4">
+                </div>
+            </section>
 
-                    <div class="text-slide" id="slide-2">
-                        <p>
-                            <span class="sentence">La diferente forma que tienen las generaciones de entender el trabajo, el liderazgo y la empresa.</span>
-                            <span class="sentence">En definitiva, <span class="orange underline">el distinto significado que tienen el esfuerzo y el sacrificio para quien fundó la empresa y para quien está llamado a liderarla mañana.</span></span>
-                        </p>
-                        <p>
-                            <span class="sentence">Y bajo esta realidad, nos guste más o nos guste menos, toca ponerse manos a la obra y diseñar un futuro conjuntamente.</span>
-                            <span class="sentence">Y como sabemos que no es un proceso sencillo, ponemos toda nuestra experiencia propia en empresa familiar y conocimiento a tu disposición.</span>
-                        </p>
-                    </div>
+            <section class="chapter" id="chapter-2">
+                <div class="chapter-text">
+                    <p>Miro los rankings empresariales por provincias y siempre estamos ahí arriba. Empresas familiares generando la mayor parte de la riqueza y empleo del país, con historias empresariales que bien merecerían una serie de Netflix.</p>
+                </div>
+                <div class="chapter-visual">
+                    <img src="./src/img_01.png" alt="" class="chapter-media chapter-illustration" data-parallax="0.35" aria-hidden="true">
+                </div>
+            </section>
 
-                    <div class="text-slide" id="slide-3">
-                        <p>
-                            <span class="sentence">En ORIA profesionalizamos el proceso de relevo generacional y evolución organizativa a través de estas cuatro áreas de trabajo:</span>
-                        </p>
-                        <p>
-                            <span class="sentence"><span class="orange underline">· Comunicación:</span> Creamos espacios de diálogo que facilitan el entendimiento entre generaciones.</span>
-                        </p>
-                        <p>
-                            <span class="sentence"><span class="orange underline">· Gobierno:</span> Diseñamos modelos de gobierno para que las decisiones se tomen con criterio, no por inercia.</span>
-                        </p>
-                        <p>
-                            <span class="sentence"><span class="orange underline">· Sucesión:</span> Planificamos la transición del liderazgo para garantizar la continuidad del negocio.</span>
-                        </p>
-                        <p>
-                            <span class="sentence"><span class="orange underline">· Transformación organizativa:</span> Adaptamos la organización para que las nuevas generaciones quieran liderarla y el mejor talento quiera formar parte de ella.</span>
-                        </p>
-                    </div>
+            <section class="chapter" id="chapter-3">
+                <div class="chapter-text">
+                    <p>El problema es que esa imagen de empresa aburrida nos pone en desventaja en una guerra por el talento cada vez más difícil. Y no hablamos solo de atraer profesionales de fuera...</p>
+                </div>
+                <div class="chapter-visual">
+                    <img src="./src/img_02.png" alt="" class="chapter-media chapter-illustration" data-parallax="0.35" aria-hidden="true">
+                </div>
+            </section>
 
-                    <div class="text-slide" id="slide-4">
-                        <p>
-                            <span class="sentence">Si formas parte del mundo de la empresa familiar, <span class="orange underline">estarás viviendo las dificultades para atraer, desarrollar o retener talento en tu propia organización.</span></span>
-                            <span class="sentence">Y, si además sueles asistir a encuentros sobre empresa familiar, seguramente también estarás cansado de escuchar que ese es el gran problema y que estás son las soluciones: poner fruta en la oficina, ofrecer teletrabajo y otras políticas desde Recursos Humanos...</span>
-                        </p>
-                        <p>
-                            <span class="sentence">Parches. Muchas veces eso es lo que terminan siendo estas iniciativas: <span class="orange underline">tratan el dolor de cabeza, pero no cuestionan qué lo provoca.</span></span>
-                            <span class="sentence">El hecho de vivir esa experiencia en primera persona, nos ha empujado a que vayamos más allá y que consigamos diagnosticar una de las principales causas para especializarnos en ello:</span>
-                        </p>
+            <section class="chapter" id="chapter-4">
+                <div class="chapter-text">
+                    <p>Hablamos de conseguir que la siguiente generación de la familia quiera y sea capaz de continuar el proyecto. <span class="orange underline">Ese es el momento crítico en el que muchas familias empresarias terminan su historia.</span></p>
+                </div>
+                <div class="chapter-visual">
+                    <img src="./src/img_03.png" alt="" class="chapter-media chapter-illustration" data-parallax="0.35" aria-hidden="true">
+                </div>
+            </section>
+
+            <section class="chapter" id="chapter-5">
+                <div class="chapter5-top">
+                    <div class="chapter-text">
+                        <h2 class="orange">Y por eso existe ORIA</h2>
+                        <p>Porque venimos de empresa familiar y sabemos que la continuidad pasa por ser capaz de atraer a la siguiente generación.</p>
+                        <p>Ponemos orden al proceso de relevo generacional y construimos una empresa que la siguiente generación quiera liderar.</p>
                     </div>
                 </div>
-
-                <!-- Visual Stage: Photo on slide 1, illustration on slides 2-4 -->
-                <div class="visual-stage">
-                    <img src="./src/Foto_Oria.jpg" alt="Jorge Gómez Salmerón - Fundador de ORIA" class="hero-photo">
-                    <video src="./src/ORIA.mp4" autoplay loop muted playsinline class="hero-video"></video>
+                <div class="chapter5-bottom">
+                    <div class="chapter5-bottom-left">
+                        <a href="trabajo.html" class="cta-link">[ Así es como trabajo...]</a>
+                    </div>
+                    <div class="chapter5-bottom-right chapter-visual">
+                        <img src="./src/foto_contacto_oria.jpg" alt="Jorge Gómez Salmerón" class="chapter-media" data-parallax="0.4">
+                    </div>
                 </div>
-            </div>
+            </section>
 
-            <!-- Scroll Track: creates the height needed to scroll the page -->
-            <div class="scroll-track">
-            </div>
-
-            <!-- Form Section: scrolls normally over the fixed visuals -->
+            <!-- Form Section -->
             <section class="form-section" id="form-section">
                 <h2 class="orange">PREPARANDO<br>LAS TAZAS...</h2>
-                
-                <form class="mad-libs-form" onsubmit="event.preventDefault();">
+
+                <div class="form-message" id="form-message" hidden></div>
+
+                <form class="mad-libs-form" id="cafe-form">
                     <div class="form-line">
-                        ¡Hola! Me llamo <input type="text" placeholder="[ Tu nombre ]" class="inline-input"> y os escribo desde <input type="text" placeholder="[ Tu empresa ]" class="inline-input">
+                        <label for="nombre" class="sr-only">Tu nombre</label>
+                        <label for="empresa" class="sr-only">Tu empresa</label>
+                        ¡Hola! Me llamo <input type="text" id="nombre" name="nombre" placeholder="[ Tu nombre ]" class="inline-input" autocomplete="name"> y os escribo desde <input type="text" id="empresa" name="empresa" placeholder="[ Tu empresa ]" class="inline-input" autocomplete="organization">
                     </div>
                     <div class="form-line">
-                        Me gustaría que nos tomáramos ese café para poder hablar sobre 
-                        <select class="inline-input select-input">
+                        <label for="tema" class="sr-only">Tema de conversación</label>
+                        Me gustaría que nos tomáramos ese café para poder hablar sobre
+                        <select id="tema" name="tema" class="inline-input select-input">
                             <option disabled selected value="">[ Selecciona un tema ▼ ]</option>
-                            <option>Relevo generacional</option>
-                            <option>Atracción de talento</option>
-                            <option>Evolución organizativa</option>
-                            <option>Otro tema</option>
+                            <option value="relevo-generacional">Relevo Generacional</option>
+                            <option value="profesionalizacion-gobierno">Profesionalización órganos de gobierno</option>
+                            <option value="conflictos-empresa-familia">Conflictos empresa-familia</option>
+                            <option value="atraccion-talento">Atracción de talento</option>
                         </select>
                     </div>
                     <div class="form-line">
-                        Podéis responderme a <input type="email" placeholder="[ Tu email ]" class="inline-input"> o, si lo preferís, llamarme al <input type="tel" placeholder="[ Tu teléfono ]" class="inline-input">
+                        <label for="email" class="sr-only">Tu email</label>
+                        <label for="telefono" class="sr-only">Tu teléfono</label>
+                        Podéis responderme a <input type="email" id="email" name="email" placeholder="[ Tu email ]" class="inline-input" autocomplete="email"> o, si lo preferís, llamarme al <input type="tel" id="telefono" name="telefono" placeholder="[ Tu teléfono ]" class="inline-input" autocomplete="tel">
                     </div>
-                    
+
                     <div class="form-footer">
                         <div class="submit-area">
                             <button type="submit" class="submit-btn">[ Solicitar café ]</button>
@@ -130,18 +215,123 @@
                             <p class="role orange">FUNDADOR</p>
                             <div class="details orange">
                                 <p>jorge@oriaestrategia.com</p>
-                                <p>639 477 188</p>
+                                <p><a href="https://wa.me/34614694327" target="_blank" rel="noopener noreferrer" style="display: flex; align-items: center; gap: 0.5rem; color: inherit; text-decoration: none;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                                    </svg>
+                                    614 69 43 27
+                                </a></p>
+                                <p style="font-size: 0.85rem; margin-top: 0.3rem; opacity: 0.9; line-height: 1.3;">Si tienes cualquier duda puedes escribirme por WhatsApp.</p>
                             </div>
                         </div>
                     </div>
                 </form>
             </section>
+        
+            <footer class="mobile-legal-footer">
+                <a href="aviso-legal.html">Aviso Legal</a>
+                <a href="politica-privacidad.html">Política de Privacidad</a>
+                <a href="politica-cookies.html">Política de Cookies</a>
+            </footer>
         </main>
     </div>
+
+    
+    <!-- Lenis Smooth Scrolling -->
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.29/bundled/lenis.min.js"></script>
 
     <!-- GSAP -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-    <script src="script.js"></script>
+
+    <script src="js/script.js?v=62"></script>
+    <script>
+    document.getElementById('cafe-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        var msg = document.getElementById('form-message');
+        var nombre = document.getElementById('nombre').value.trim();
+        var email = document.getElementById('email').value.trim();
+        var empresa = document.getElementById('empresa').value.trim();
+        var tema = document.getElementById('tema').value;
+        var telefono = document.getElementById('telefono').value.trim();
+        var submitBtn = this.querySelector('button[type="submit"]');
+
+        if (!nombre || !email || !tema) {
+            msg.textContent = 'Completa al menos tu nombre, email y tema para solicitar el café.';
+            msg.className = 'form-message form-message--error';
+            msg.hidden = false;
+            return;
+        }
+
+        msg.textContent = 'Enviando...';
+        msg.className = 'form-message';
+        msg.hidden = false;
+        submitBtn.disabled = true;
+
+        // Envío con Web3Forms (el destinatario se configura en el panel de web3forms.com)
+        var controller = new AbortController();
+        var timer = setTimeout(function() { controller.abort(); }, 15000);
+
+        fetch('https://api.web3forms.com/submit', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                access_key: 'b49cdd4d-245b-40aa-9f36-7e03c1349230',
+                subject: 'Nueva solicitud de café web: ' + tema,
+                from_name: 'Web ORIA',
+                replyto: email,
+                Nombre: nombre,
+                Empresa: empresa,
+                Email: email,
+                Telefono: telefono,
+                Tema: tema
+            }),
+            signal: controller.signal
+        })
+        .then(function(response) {
+            return response.json();
+        })
+        .then(function(data) {
+            if (!data.success) throw new Error('Web3Forms: ' + data.message);
+        })
+        .finally(function() { clearTimeout(timer); })
+        .then(function() {
+            msg.textContent = '¡Solicitud enviada con éxito! Te escribiré pronto para cuadrar el café.';
+            msg.className = 'form-message form-message--success';
+            document.getElementById('cafe-form').reset();
+            submitBtn.disabled = false;
+        })
+        .catch(error => {
+            console.error(error);
+            msg.textContent = 'El servicio automático está caído. Abriendo tu correo en 2 segundos para no perder el mensaje...';
+            msg.className = 'form-message form-message--error';
+            submitBtn.disabled = false;
+            
+            // Fallback to mailto
+            var subject = encodeURIComponent('Nueva solicitud de café: ' + tema);
+            var body = encodeURIComponent(
+                'Hola Jorge, te escribo desde la web:\n\n' +
+                'Nombre: ' + nombre + '\n' +
+                'Email: ' + email + '\n' +
+                'Empresa: ' + empresa + '\n' +
+                'Teléfono: ' + telefono + '\n' +
+                'Tema: ' + tema
+            );
+            setTimeout(() => {
+                window.location.href = 'mailto:jgomez.mapa@gmail.com,jorge@oriaestrategia.com?subject=' + subject + '&body=' + body;
+            }, 2000);
+        });
+    });
+    </script>
+
+    <!-- Cookie Banner -->
+    <div id="cookie-banner" class="cookie-banner" style="display: none;">
+        <p>Utilizamos cookies propias y de terceros para mejorar tu experiencia y analizar el tráfico de nuestra web. Al continuar navegando, aceptas nuestra <a href="politica-cookies.html">Política de Cookies</a>.</p>
+        <button id="accept-cookies" class="cookie-btn">Aceptar</button>
+    </div>
+
 </body>
 </html>
