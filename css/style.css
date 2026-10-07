@@ -263,13 +263,13 @@ body {
 }
 
 .sticky-video-container {
-    overflow-x: hidden;
     grid-area: 1 / 1;
     position: sticky;
     top: 50vh;
     height: 50vh;
     z-index: 10;
     pointer-events: none;
+    background-color: var(--color-cream);
     
     width: 100%;
     display: flex;
@@ -433,7 +433,14 @@ body {
 
 /* Tablet landscape – sidebar becomes horizontal header, chapters stack vertically */
 @media (max-width: 1024px) {
-    .hamburger-btn { display: flex; z-index: 101; }
+    .hamburger-btn { 
+        display: flex; 
+        z-index: 101; 
+        position: absolute;
+        right: 2rem;
+        top: 50%;
+        transform: translateY(-50%);
+    }
     .hamburger-btn span {
     display: block; background-color: var(--color-cream); }
     .hamburger-btn.menu-open span { background-color: var(--color-green-dark); }
@@ -685,8 +692,15 @@ body.no-scroll {
 
 @media (max-width: 1024px) {
     .sticky-video-container {
-    overflow-x: hidden; justify-content: center; padding-left: 0; }
-    
+        justify-content: center; 
+        padding-left: 0; 
+        background-color: var(--color-cream);
+        top: 60vh;
+        height: 40vh;
+    }
+    .sticky-video-container video {
+        mix-blend-mode: normal;
+    }
 }
 
 #area-sucesion { padding-bottom: 150vh !important; min-height: 0 !important; }
