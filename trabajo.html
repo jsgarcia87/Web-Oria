@@ -36,7 +36,7 @@
 
     <!-- Adobe Fonts -->
     <link rel="stylesheet" href="https://use.typekit.net/vhg4tox.css">
-    <link rel="stylesheet" href="css/style.css?t=104">
+    <link rel="stylesheet" href="css/style.css?t=112">
 </head>
 <body>
     <div class="layout">
@@ -102,42 +102,42 @@
 
             <!-- Areas: sticky video with scrolling text panels -->
             <div class="areas-wrapper" id="areas-wrapper">
-                <!-- Video that scrolls in and sticks -->
                 <div class="sticky-video-container" id="areas-video">
                     <video src="./src/ORIA.mp4" autoplay loop muted playsinline class="chapter-video"></video>
                 </div>
                 
-                <div class="sticky-text-container">
-                    <div class="chapter-text">
-                        <p>Cuando tenga claro qué está pasando, os presentaré <span class="orange underline">el diagnóstico y un plan de acción.</span> Dependiendo de cada familia, trabajaremos uno o varios de estos ámbitos:</p>
-                    </div>
-                </div>
-                
                 <div class="panels-container">
-                    <div class="area-panel" id="area-comunicacion">
+                    <section class="chapter" id="chapter-intro-areas">
+                        <div class="chapter-text">
+                            <p>Cuando tenga claro qué está pasando, os presentaré <span class="orange underline">el diagnóstico y un plan de acción.</span> Dependiendo de cada familia, trabajaremos uno o varios de estos ámbitos:</p>
+                        </div>
+                    </section>
+                    
+                    <section class="chapter" id="area-comunicacion">
                         <div class="chapter-text">
                             <h2 class="orange">Comunicación</h2>
                             <p>Evitar que los problemas de la empresa acaben en la comida del domingo y que los familiares acaben en la sala de reuniones, haciendo de mediador y traductor entre generaciones con distintas formas de ver las cosas.</p>
                         </div>
-                    </div>
-                    <div class="area-panel" id="area-gobierno">
+                    </section>
+
+                    <section class="chapter" id="area-gobierno">
                         <div class="chapter-text">
                             <h2 class="orange">Gobierno</h2>
                             <p>Rediseñar la estructura, profesionalizando los órganos de gobierno que sean necesarios y que las personas tengan claro su rol de accionista, consejero, directivo, profesional o familiar.</p>
                         </div>
-                    </div>
-                    <div class="area-panel" id="area-sucesion">
-                        <div class="chapter-text">
+                    </section>
+
+                    <section class="chapter" id="area-sucesion">
+                <div class="sucesion-pin-wrapper" style="width: 100%; display: flex; justify-content: center;">
+                    <div class="chapter-text">
                             <h2 class="orange">Sucesión</h2>
                             <p>Acordar las políticas sucesorias, diseñar el plan de carrera del sucesor y trabajar la delegación progresiva de responsabilidades y la salida paulatina del predecesor.</p>
                         </div>
-                    </div>
                 </div>
+            </section>
             </div>
-        
-            
-        </main>
-    </div>
+        </div>
+
 
     
     <!-- Lenis Smooth Scrolling -->
@@ -147,7 +147,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
 
-    <script src="js/script.js?v=62"></script>
+    <script src="js/script.js?v=72"></script>
 
     <!-- Cookie Banner -->
     <div id="cookie-banner" class="cookie-banner" style="display: none;">

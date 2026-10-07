@@ -826,3 +826,24 @@ body.no-scroll {
         height: auto;
     }
 }
+
+/* Fix for the video now that it is a normal chapter visual */
+.chapter-visual video {
+    mix-blend-mode: multiply;
+    object-fit: contain !important; /* It is a logo animation, we don't want it cropped */
+}
+
+/* Make the areas sections stack closer together instead of taking 100vh each */
+#area-comunicacion, #area-gobierno, #area-sucesion {
+    min-height: auto !important;
+    padding-top: 5vh;
+    padding-bottom: 5vh;
+}
+#chapter-intro-areas {
+    min-height: auto !important;
+    padding-bottom: 10vh;
+}
+
+
+
+

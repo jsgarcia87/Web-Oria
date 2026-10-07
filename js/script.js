@@ -86,53 +86,17 @@ document.querySelectorAll('.chapter-media').forEach(media => {
     );
 });
 
-// Area panels — premium floaty parallax
-document.querySelectorAll('.area-panel').forEach((panel, index, array) => {
-    const text = panel.querySelector('.chapter-text');
-    if (!text) return;
-    
-    // Remove any CSS transition classes so GSAP can take full control
-    text.classList.remove('reveal', 'revealed');
-    
-    const isLast = index === array.length - 1;
-    
-    const tl = gsap.timeline({
-        scrollTrigger: {
-            trigger: panel,
-            start: "top 85%",
-            end: "bottom 15%",
-            scrub: 2.5 // Heavy scrub for that smooth, dreamy lag
-        }
-    });
-
-    // Fade IN with upward float
-    tl.fromTo(text, 
-        { opacity: 0, y: 100 },
-        { opacity: 1, y: 0, duration: 0.4, ease: "power2.inOut" }
-    );
-    
-    if (!isLast) {
-        // Small resting float
-        tl.to(text, { opacity: 1, y: -30, duration: 0.2, ease: "none" })
-        // Fade OUT with continued upward float
-        .to(text, { opacity: 0, y: -120, duration: 0.4, ease: "power2.in" });
-    } else {
-        // For the last block, it stays fully visible and doesn't move
-        tl.to(text, { opacity: 1, y: 0, duration: 0.6, ease: "none" });
-    }
-});
-
-
-// Pin Sucesion text so it stays perfectly still
-const sucesionText = document.querySelector('#area-sucesion .chapter-text');
-if (sucesionText) {
+// Pin Sucesion wrapper so it doesn't conflict with fade-in
+const sucesionWrapper = document.querySelector('.sucesion-pin-wrapper');
+if (sucesionWrapper) {
     ScrollTrigger.create({
-        trigger: sucesionText,
-        start: 'top 28%',
+        trigger: sucesionWrapper,
+        start: 'top 15%',
         endTrigger: '#area-sucesion',
         end: 'bottom bottom',
         pin: true,
-        pinSpacing: false
+        pinSpacing: false,
+        pinType: "transform" // Absolute smoothness with Lenis
     });
 }
 
