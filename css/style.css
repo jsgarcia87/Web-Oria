@@ -270,6 +270,9 @@ body {
     z-index: 10;
     pointer-events: none;
     background-color: var(--color-cream);
+    -webkit-box-shadow: 0px 0px 100px 100px var(--color-cream);
+    -moz-box-shadow: 0px 0px 100px 100px var(--color-cream);
+    box-shadow: 0px 0px 50px 50px var(--color-cream);
     
     width: 100%;
     display: flex;
