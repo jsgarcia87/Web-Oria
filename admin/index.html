@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administración - Web Oria</title>
+
+    <!-- Preconnect y Fuentes -->
+    <link rel="preconnect" href="https://use.typekit.net" crossorigin>
+    <link rel="stylesheet" href="https://use.typekit.net/vhg4tox.css">
+
+    <style>
+        :root { 
+            --primary: #124634; 
+            --secondary: #0d3225; 
+            --bg: #fef5e6; 
+            --white: #ffffff; 
+            --border: #e2e8f0; 
+            --accent: #F07F29; 
+            --success: #22c55e; 
+            --danger: #ef4444; 
+            --font-main: "adapter-arabic-display", sans-serif;
+        }
+        
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body { 
+            font-family: var(--font-main); 
+            background: var(--bg); 
+            color: var(--primary); 
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        /* LOGIN SCREEN */
+        #login-section { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
+        .login-card { background: var(--white); padding: 40px; border-radius: 12px; box-shadow: 0 10px 25px rgba(18, 70, 52, 0.08); width: 100%; max-width: 400px; border: 1px solid rgba(18, 70, 52, 0.1); }
+        .login-card .logo { display: block; margin: 0 auto 15px auto; max-width: 140px; height: auto; }
+        .login-card p { text-align: center; color: var(--primary); opacity: 0.8; margin-bottom: 24px; font-size: 15px; font-weight: 600;}
+        
+        /* FORMS */
+        .form-group { margin-bottom: 20px; position: relative; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 14px; color: var(--primary); }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 15px; outline: none; transition: border 0.2s, box-shadow 0.2s; font-family: inherit; background-color: var(--bg); color: var(--primary); }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(240, 127, 41, 0.1); background-color: var(--white); }
+        
+        .password-wrapper { position: relative; }
+        .password-wrapper input { padding-right: 45px; }
+        .toggle-password { position: absolute; right: 12px; top: 12px; cursor: pointer; color: var(--primary); opacity: 0.6; transition: opacity 0.2s; }
+        .toggle-password:hover { opacity: 1; }
+
+        button { width: 100%; background: var(--primary); color: var(--white); padding: 12px; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; font-family: inherit; }
+        button:hover { background: var(--secondary); transform: translateY(-1px); }
+        button.btn-inline { width: auto; padding: 8px 16px; font-size: 14px; }
+        
+        .btn-danger { background: transparent; color: var(--danger); border: 1px solid var(--danger); }
+        .btn-danger:hover { background: var(--danger); color: var(--white); }
+        .btn-success { background: var(--accent); color: var(--white); }
+        .btn-success:hover { background: #d97224; }
+        .btn-outline { background: transparent; color: var(--primary); border: 1px solid rgba(18, 70, 52, 0.3); }
+        .btn-outline:hover { background: rgba(18, 70, 52, 0.05); }
+
+        /* LINEAR ICONS (Heroicons style) */
+        .icon {
+            display: inline-block;
+            vertical-align: -0.18em;
+            width: 1.15em;
+            height: 1.15em;
+            stroke-width: 1.8;
+            stroke: currentColor;
+            fill: none;
+            flex-shrink: 0;
+        }
+        .icon-sm {
+            width: 1em;
+            height: 1em;
+            vertical-align: -0.14em;
+        }
+        .icon-lg {
+            width: 2.2em;
+            height: 2.2em;
+        }
+        .btn-inline .icon {
+            width: 17px;
+            height: 17px;
+            margin-right: 6px;
+            vertical-align: -0.15em;
+        }
+        #admin-section { display: none; min-height: 100vh; }
+        .navbar { background: var(--white); padding: 16px 5%; box-shadow: 0 1px 10px rgba(18, 70, 52, 0.05); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 10; border-bottom: 2px solid var(--accent); }
+        .navbar .nav-logo { height: 30px; margin-right: 15px; vertical-align: middle; }
+        .navbar h1 { font-size: 22px; font-weight: 700; color: var(--primary); letter-spacing: -0.5px; display: flex; align-items: center;}
+        .nav-buttons { display: flex; gap: 10px; align-items: center; }
+        .btn-tab { background: transparent; color: var(--primary); border: 1px solid transparent; font-weight: 600;}
+        .btn-tab:hover { background: var(--bg); }
+        .btn-tab.active { background: var(--primary); color: var(--white); border-color: var(--primary); }
+        
+        .dashboard-content { padding: 40px 5%; max-width: 1000px; margin: 0 auto; }
+        .tab-content { display: none; animation: fadeIn 0.4s ease; }
+        .tab-content.active { display: block; }
+        
+        /* HEADER FILTER */
+        .filter-section { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; background: var(--white); padding: 15px 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(18, 70, 52, 0.04); border: 1px solid rgba(18, 70, 52, 0.1); }
+        .filter-section h3 { font-size: 18px; margin: 0; }
+        .filter-section select { width: 250px; padding: 8px 12px; }
+
+        /* CARDS */
+        .content-item { background: var(--white); border: 1px solid rgba(18, 70, 52, 0.1); padding: 24px; margin-bottom: 24px; border-radius: 12px; box-shadow: 0 4px 12px rgba(18, 70, 52, 0.03); transition: transform 0.2s; }
+        .content-item:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(18, 70, 52, 0.06); }
+        .content-item header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px; }
+        .badge-group { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+        .id-badge { background: var(--bg); padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; color: var(--accent); border: 1px solid rgba(240, 127, 41, 0.2); }
+        .page-badge { background: #e2e8f0; padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; color: var(--secondary); border: 1px solid #cbd5e1; }
+        
+        .feedback-msg { font-size: 14px; font-weight: 600; margin-top: 10px; display: none; text-align: center; padding: 8px; border-radius: 6px; }
+        .feedback-msg.success { color: var(--primary); background: #dcfce7; border: 1px solid #86efac; }
+        .feedback-msg.error { color: var(--danger); background: #fee2e2; border: 1px solid #fca5a5; }
+        
+        .add-new-card { background: rgba(240, 127, 41, 0.05); border: 1px dashed var(--accent); }
+        .add-new-card h3 { color: var(--accent); font-weight: 700; }
+
+        /* USER LIST */
+        .user-row { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid var(--border); flex-wrap: wrap; gap: 10px; }
+        .user-row:last-child { border-bottom: none; }
+        .user-info { font-weight: 600; font-size: 16px; }
+        .user-actions { display: flex; gap: 10px; }
+        
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .navbar { flex-direction: column; gap: 15px; text-align: center; padding: 20px 5%; }
+            .nav-buttons { flex-wrap: wrap; justify-content: center; width: 100%; }
+            .nav-buttons button { flex: 1; min-width: 120px; }
+            .dashboard-content { padding: 20px 5%; }
+            .content-item { padding: 16px; }
+            .filter-section { flex-direction: column; gap: 15px; align-items: flex-start; }
+            .filter-section select { width: 100%; }
+            .user-row { flex-direction: column; align-items: flex-start; }
+            .user-actions { width: 100%; flex-wrap: wrap; }
+            .user-actions button { flex: 1; text-align: center; justify-content: center; }
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-section">
+    <div class="login-card">
+        <svg class="logo" width="198" height="61" viewBox="0 0 198 61" fill="none" xmlns="http://www.w3.org/2000/svg" style="display: block; margin: 0 auto 15px auto; max-width: 140px; height: auto;">
+            <path d="M0 29.4143C0 6.32712 6.34253 0 29.5661 0C52.7896 0 58.9695 6.24476 58.9695 29.332C58.9695 54.0639 52.7119 60.8004 29.6511 60.8004C6.59021 60.8004 0 54.0615 0 29.4143ZM41.6732 30.0708C41.6732 24.1555 39.1212 22.5131 29.5661 22.5131C20.011 22.5131 17.2963 24.1555 17.2963 30.0708C17.2963 35.9861 19.9309 37.4661 29.5661 37.4661C39.2013 37.4661 41.6732 35.9037 41.6732 30.0708Z" fill="var(--primary)"/>
+            <path d="M62.5151 59.1557V1.64476H91.9185C110.944 1.64476 115.637 7.06835 115.637 18.9814C115.637 26.2919 113.578 31.0591 109.873 34.2614C112.015 35.9062 113.909 38.6967 114.319 43.7933C114.812 48.7227 115.06 53.8169 116.295 59.1557H98.669C97.5981 56.1156 97.3529 52.1721 97.1028 49.6238C96.8551 45.2709 95.1262 44.0379 89.8569 44.0379H80.2193V59.1557H62.5127H62.5151ZM97.9308 26.2072C97.9308 23.1042 96.0368 22.1813 89.5316 22.1813H80.2242V30.2331H89.449C95.7065 30.2331 97.9308 28.5544 97.9308 26.2072Z" fill="var(--primary)"/>
+            <path d="M118.626 59.1557L128.261 1.64476H146.793L137.158 59.1557H118.626Z" fill="var(--primary)"/>
+            <path d="M188.365 1.64476H151.468L141.833 59.1557H159.457L161.521 46.3076H178.312L180.376 59.1557H198L188.365 1.64476ZM163.08 30.2355L164.561 22.1837H175.27L176.751 30.2355H163.08Z" fill="var(--primary)"/>
+        </svg>
+        <p>Panel de Administración</p>
+        <div class="form-group">
+            <label>Usuario</label>
+            <input type="text" id="username" placeholder="Tu usuario">
+        </div>
+        <div class="form-group">
+            <label>Contraseña</label>
+            <div class="password-wrapper">
+                <input type="password" id="password" placeholder="Tu contraseña">
+                <span class="toggle-password" onclick="togglePassword('password', this)">
+                    <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                </span>
+            </div>
+        </div>
+        <button onclick="login()">Entrar al Panel</button>
+        <div id="login-error" class="feedback-msg error">Datos incorrectos</div>
+    </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="admin-section">
+    <nav class="navbar">
+        <h1><svg class="nav-logo" width="198" height="61" viewBox="0 0 198 61" fill="none" xmlns="http://www.w3.org/2000/svg" style="height: 30px; width: auto; margin-right: 15px; vertical-align: middle;">
+            <path d="M0 29.4143C0 6.32712 6.34253 0 29.5661 0C52.7896 0 58.9695 6.24476 58.9695 29.332C58.9695 54.0639 52.7119 60.8004 29.6511 60.8004C6.59021 60.8004 0 54.0615 0 29.4143ZM41.6732 30.0708C41.6732 24.1555 39.1212 22.5131 29.5661 22.5131C20.011 22.5131 17.2963 24.1555 17.2963 30.0708C17.2963 35.9861 19.9309 37.4661 29.5661 37.4661C39.2013 37.4661 41.6732 35.9037 41.6732 30.0708Z" fill="var(--primary)"/>
+            <path d="M62.5151 59.1557V1.64476H91.9185C110.944 1.64476 115.637 7.06835 115.637 18.9814C115.637 26.2919 113.578 31.0591 109.873 34.2614C112.015 35.9062 113.909 38.6967 114.319 43.7933C114.812 48.7227 115.06 53.8169 116.295 59.1557H98.669C97.5981 56.1156 97.3529 52.1721 97.1028 49.6238C96.8551 45.2709 95.1262 44.0379 89.8569 44.0379H80.2193V59.1557H62.5127H62.5151ZM97.9308 26.2072C97.9308 23.1042 96.0368 22.1813 89.5316 22.1813H80.2242V30.2331H89.449C95.7065 30.2331 97.9308 28.5544 97.9308 26.2072Z" fill="var(--primary)"/>
+            <path d="M118.626 59.1557L128.261 1.64476H146.793L137.158 59.1557H118.626Z" fill="var(--primary)"/>
+            <path d="M188.365 1.64476H151.468L141.833 59.1557H159.457L161.521 46.3076H178.312L180.376 59.1557H198L188.365 1.64476ZM163.08 30.2355L164.561 22.1837H175.27L176.751 30.2355H163.08Z" fill="var(--primary)"/>
+        </svg> Administración</h1>
+        <div class="nav-buttons">
+            <button class="btn-inline btn-tab active" onclick="switchTab('textos'); loadContent();">
+                <svg class="icon" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg>
+                Textos
+            </button>
+            <button class="btn-inline btn-tab" onclick="switchTab('mensajes'); loadMessages();">
+                <svg class="icon" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/></svg>
+                Mensajes <span id="badge-messages-count" style="display:none; background:var(--accent); color:#fff; border-radius:10px; padding:2px 7px; font-size:11px; margin-left:4px;"></span>
+            </button>
+            <button class="btn-inline btn-tab" onclick="switchTab('formulario'); loadSettings();">
+                <svg class="icon" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75"/></svg>
+                Formulario
+            </button>
+            <button class="btn-inline btn-tab" onclick="switchTab('extensiones'); loadExtensions();">
+                <svg class="icon" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.25 6.087c0-.355.186-.676.401-.959.221-.29.349-.634.349-1.003 0-1.036-1.007-1.875-2.25-1.875s-2.25.84-2.25 1.875c0 .369.128.713.349 1.003.215.283.401.604.401.959v0a.64.64 0 01-.657.643 48.39 48.39 0 01-4.163-.3c.186 1.524.645 2.956 1.33 4.225m0 0a.64.64 0 01-.17.72 1.875 1.875 0 000 2.652.64.64 0 01.17.72 19.345 19.345 0 001.33 4.225c1.378-.105 2.766-.205 4.163-.3a.64.64 0 01.657.643v0c0 .355-.186.676-.401.959a1.875 1.875 0 00-.349 1.003c0 1.035 1.008 1.875 2.25 1.875 1.243 0 2.25-.84 2.25-1.875 0-.369-.128-.713-.349-1.003a2.553 2.553 0 01-.401-.959v0a.64.64 0 01.657-.643c1.465.105 2.91.21 4.34.316a19.29 19.29 0 001.33-4.225.64.64 0 01-.17-.72 1.875 1.875 0 000-2.652.64.64 0 01.17-.72 19.35 19.35 0 00-1.33-4.225 48.435 48.435 0 00-4.34.316.64.64 0 01-.657-.643v0z"/></svg>
+                Extensiones
+            </button>
+            <button class="btn-inline btn-tab" onclick="switchTab('estadisticas'); loadAnalytics();">
+                <svg class="icon" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"/></svg>
+                Estadísticas
+            </button>
+            <button class="btn-inline btn-tab" onclick="switchTab('usuarios'); loadUsers();">
+                <svg class="icon" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z"/></svg>
+                Usuarios
+            </button>
+            <button class="btn-inline btn-danger" onclick="logout()">
+                <svg class="icon" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9"/></svg>
+                Cerrar sesión
+            </button>
+        </div>
+    </nav>
+
+    <div class="dashboard-content">
+        
+        <!-- PESTAÑA: TEXTOS -->
+        <div id="tab-textos" class="tab-content active">
+            <div class="content-item add-new-card">
+                <header><h3><svg class="icon" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg> Añadir Nuevo Texto</h3></header>
+                <div class="form-group">
+                    <label>Página (Opcional)</label>
+                    <input type="text" id="new_page" placeholder="Ej: index, contacto...">
+                </div>
+                <div class="form-group">
+                    <label>Identificador (Ej: subtitulo_portada)</label>
+                    <input type="text" id="new_id" placeholder="Sin espacios, usa guiones bajos">
+                </div>
+                <div class="form-group">
+                    <label>Contenido</label>
+                    <textarea id="new_value" rows="3" placeholder="Escribe el texto aquí..."></textarea>
+                </div>
+                <button class="btn-inline btn-success" onclick="createNewContent()">Guardar Nuevo Texto</button>
+                <div id="new_msg" class="feedback-msg"></div>
+            </div>
+
+            <!-- FILTRO DE PÁGINAS -->
+            <div class="filter-section">
+                <h3>Textos de la Web</h3>
+                <select id="page-filter" onchange="filterContent()">
+                    <option value="all">Todas las páginas</option>
+                    <!-- Las opciones se cargan con JS -->
+                </select>
+            </div>
+
+            <div id="content-list"></div>
+        </div>
+
+        <!-- PESTAÑA: MENSAJES -->
+        <div id="tab-mensajes" class="tab-content">
+            <div class="content-item" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:15px;">
+                <div>
+                    <h3 style="margin-bottom:4px; font-size:20px; display:flex; align-items:center;">
+                        <svg class="icon" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/></svg>
+                        Solicitudes de Contacto
+                    </h3>
+                    <p style="font-size:14px; opacity:0.8;">Copia de seguridad en base de datos de los contactos recibidos desde la web.</p>
+                </div>
+                <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                    <a href="../api/export_messages.php" class="btn-inline btn-success" style="text-decoration:none; display:inline-flex; align-items:center; gap:6px; cursor:pointer;" download>
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                        Descargar Excel (CSV)
+                    </a>
+                    <button class="btn-inline btn-outline" onclick="loadMessages()">
+                        <svg class="icon" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"/></svg>
+                        Actualizar
+                    </button>
+                </div>
+            </div>
+
+            <div id="messages-list">
+                <div class="content-item" style="text-align:center; padding:30px; opacity:0.7;">
+                    Cargando mensajes...
+                </div>
+            </div>
+        </div>
+        
+        <!-- PESTAÑA: ESTADÍSTICAS -->
+        <div id="tab-estadisticas" class="tab-content">
+            <div class="content-item" style="display:flex; justify-content:space-between; gap:20px; flex-wrap:wrap;">
+                <div style="flex:1; min-width:200px; text-align:center; padding:20px; background:var(--bg); border-radius:8px;">
+                    <h4 style="color:var(--accent); font-size:14px; text-transform:uppercase;">Visitas Totales</h4>
+                    <p id="stat-visits" style="font-size:32px; font-weight:700; color:var(--primary); margin-top:10px;">-</p>
+                </div>
+                <div style="flex:1; min-width:200px; text-align:center; padding:20px; background:var(--bg); border-radius:8px;">
+                    <h4 style="color:var(--accent); font-size:14px; text-transform:uppercase;">Tiempo Medio</h4>
+                    <p id="stat-time" style="font-size:32px; font-weight:700; color:var(--primary); margin-top:10px;">-</p>
+                </div>
+                <div style="flex:1; min-width:200px; text-align:center; padding:20px; background:var(--bg); border-radius:8px;">
+                    <h4 style="color:var(--accent); font-size:14px; text-transform:uppercase;">Tasa de Rebote</h4>
+                    <p id="stat-bounce" style="font-size:32px; font-weight:700; color:var(--primary); margin-top:10px;">-</p>
+                </div>
+            </div>
+
+            <div class="content-item">
+                <header><h3>Evolución Diaria (Últimos 7 días)</h3></header>
+                <div style="position: relative; height: 300px; width: 100%;">
+                    <canvas id="analyticsChart"></canvas>
+                </div>
+            </div>
+            
+            <div class="content-item">
+                <header><h3>Páginas más visitadas</h3></header>
+                <div id="pages-stats-list" style="margin-top:15px;">
+                    Cargando...
+                </div>
+            </div>
+        </div>
+
+        
+        <!-- PESTAÑA: FORMULARIO -->
+        <div id="tab-formulario" class="tab-content">
+            <div class="content-item">
+                <header><h3>Configuración de Correos</h3></header>
+                <div class="form-group">
+                    <label>Recibir correos en:</label>
+                    <input type="email" id="set_email_to" placeholder="tucorreo@ejemplo.com">
+                </div>
+                <div class="form-group">
+                    <label>Asunto de la respuesta automática al cliente:</label>
+                    <input type="text" id="set_reply_subject" placeholder="Hemos recibido tu solicitud">
+                </div>
+                <div class="form-group">
+                    <label>Mensaje de respuesta automática al cliente:</label>
+                    <textarea id="set_reply_message" rows="5" placeholder="Escribe el mensaje..."></textarea>
+                </div>
+                <button class="btn-inline btn-success" onclick="saveSettings()">Guardar Configuración</button>
+                <div id="settings_msg" class="feedback-msg"></div>
+            </div>
+        </div>
+
+        <!-- PESTAÑA: EXTENSIONES (ANALYTICS, CLARITY, SCRIPTS) -->
+        <div id="tab-extensiones" class="tab-content">
+            <div class="content-item">
+                <header>
+                    <div>
+                        <h3 style="font-size:20px; margin-bottom:4px; display:flex; align-items:center;">
+                            <svg class="icon" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.25 6.087c0-.355.186-.676.401-.959.221-.29.349-.634.349-1.003 0-1.036-1.007-1.875-2.25-1.875s-2.25.84-2.25 1.875c0 .369.128.713.349 1.003.215.283.401.604.401.959v0a.64.64 0 01-.657.643 48.39 48.39 0 01-4.163-.3c.186 1.524.645 2.956 1.33 4.225m0 0a.64.64 0 01-.17.72 1.875 1.875 0 000 2.652.64.64 0 01.17.72 19.345 19.345 0 001.33 4.225c1.378-.105 2.766-.205 4.163-.3a.64.64 0 01.657.643v0c0 .355-.186.676-.401.959a1.875 1.875 0 00-.349 1.003c0 1.035 1.008 1.875 2.25 1.875 1.243 0 2.25-.84 2.25-1.875 0-.369-.128-.713-.349-1.003a2.553 2.553 0 01-.401-.959v0a.64.64 0 01.657-.643c1.465.105 2.91.21 4.34.316a19.29 19.29 0 001.33-4.225.64.64 0 01-.17-.72 1.875 1.875 0 000-2.652.64.64 0 01.17-.72 19.35 19.35 0 00-1.33-4.225 48.435 48.435 0 00-4.34.316.64.64 0 01-.657-.643v0z"/></svg>
+                            Extensiones y Herramientas de Seguimiento
+                        </h3>
+                        <p style="font-size:14px; opacity:0.8;">Añade Google Analytics, Microsoft Clarity o códigos personalizados en toda la web sin tocar los archivos HTML.</p>
+                    </div>
+                </header>
+            </div>
+
+            <!-- Integraciones Directas -->
+            <div class="content-item">
+                <header><h3><svg class="icon" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"/></svg> Integraciones Directas</h3></header>
+                
+                <div class="form-group">
+                    <label>Google Analytics 4 (ID de Medición):</label>
+                    <input type="text" id="ext_google_analytics" placeholder="Ej: G-XXXXXXXXXX">
+                    <small style="display:block; margin-top:6px; font-size:13px; opacity:0.75;">Solo tienes que pegar tu ID (empieza por "G-"). Se cargará automáticamente el script oficial de Google en todas las páginas.</small>
+                </div>
+
+                <div class="form-group" style="margin-bottom:0;">
+                    <label>Microsoft Clarity (ID del Proyecto):</label>
+                    <input type="text" id="ext_clarity" placeholder="Ej: 9k8j7h6g5f">
+                    <small style="display:block; margin-top:6px; font-size:13px; opacity:0.75;">Pega el ID de proyecto de Clarity para activar mapas de calor y grabaciones de navegación.</small>
+                </div>
+            </div>
+
+            <!-- Scripts Personalizados Avanzados -->
+            <div class="content-item">
+                <header><h3><svg class="icon" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5"/></svg> Códigos y Scripts Personalizados (Avanzado)</h3></header>
+                
+                <div class="form-group">
+                    <label>Código en la cabecera (&lt;head&gt;):</label>
+                    <textarea id="ext_custom_head" rows="5" placeholder="<!-- Pega aquí etiquetas <script>, Meta Pixel, Google Tag Manager, etc. -->" style="font-family:monospace; font-size:13px;"></textarea>
+                    <small style="display:block; margin-top:6px; font-size:13px; opacity:0.75;">Cualquier etiqueta &lt;script&gt;, &lt;meta&gt; o código HTML pegado aquí se inyectará y ejecutará en la cabecera de todas las páginas.</small>
+                </div>
+
+                <div class="form-group">
+                    <label>Código justo tras la apertura de &lt;body&gt; (Inicio de página):</label>
+                    <textarea id="ext_custom_body_open" rows="5" placeholder="<!-- Pega aquí etiquetas <noscript> de Google Tag Manager, Meta Pixel, etc. -->" style="font-family:monospace; font-size:13px;"></textarea>
+                    <small style="display:block; margin-top:6px; font-size:13px; opacity:0.75;">Se inyecta inmediatamente después de la etiqueta &lt;body&gt; (imprescindible para el código &lt;noscript&gt; de Google Tag Manager o Meta Pixel).</small>
+                </div>
+
+                <div class="form-group">
+                    <label>Código antes del cierre de página (&lt;/body&gt;):</label>
+                    <textarea id="ext_custom_body" rows="5" placeholder="<!-- Pega aquí widgets de chat, scripts de pie de página, etc. -->" style="font-family:monospace; font-size:13px;"></textarea>
+                    <small style="display:block; margin-top:6px; font-size:13px; opacity:0.75;">Se inyectará al final del body para no retrasar la carga visual de la web.</small>
+                </div>
+
+                <button class="btn-inline btn-success" onclick="saveExtensions()">Guardar Extensiones</button>
+                <div id="ext_msg" class="feedback-msg"></div>
+            </div>
+        </div>
+
+        <!-- PESTAÑA: USUARIOS -->
+        <div id="tab-usuarios" class="tab-content">
+            
+            <div class="content-item">
+                <header><h3>Registrar Nuevo Administrador</h3></header>
+                <div class="form-group">
+                    <label>Nombre de Usuario</label>
+                    <input type="text" id="reg_username" placeholder="Ej: maria_admin">
+                </div>
+                <div class="form-group">
+                    <label>Contraseña</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="reg_password" placeholder="Mínimo 6 caracteres">
+                        <span class="toggle-password" onclick="togglePassword('reg_password', this)">
+                            <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                        </span>
+                    </div>
+                </div>
+                <button onclick="registerUser()" class="btn-inline btn-success">Crear Usuario</button>
+                <div id="reg_msg" class="feedback-msg"></div>
+            </div>
+
+            <div class="content-item">
+                <header><h3>Usuarios Existentes</h3></header>
+                <div id="users-list">
+                    Cargando usuarios...
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<script>
+    // --- UI HELPERS ---
+    function togglePassword(inputId, iconSpan) {
+        const input = document.getElementById(inputId);
+        const iconEye = '<svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>';
+        const iconEyeOff = '<svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/></svg>';
+        
+        if (input.type === 'password') {
+            input.type = 'text';
+            iconSpan.innerHTML = iconEyeOff;
+        } else {
+            input.type = 'password';
+            iconSpan.innerHTML = iconEye;
+        }
+    }
+
+    function switchTab(tabId) {
+        document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.btn-tab').forEach(b => b.classList.remove('active'));
+        document.getElementById(`tab-${tabId}`).classList.add('active');
+        event.target.classList.add('active');
+    }
+
+    function showFeedback(elementId, isSuccess, message) {
+        const el = document.getElementById(elementId);
+        if(!el) return;
+        el.textContent = message;
+        el.className = `feedback-msg ${isSuccess ? 'success' : 'error'}`;
+        el.style.display = 'block';
+        setTimeout(() => el.style.display = 'none', 3000);
+    }
+
+    // --- AUTENTICACIÓN ---
+    async function login() {
+        const u = document.getElementById('username').value;
+        const p = document.getElementById('password').value;
+        
+        const res = await fetch('../api/login.php', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({username: u, password: p})
+        });
+        const data = await res.json();
+        
+        if(data.success) {
+            document.getElementById('login-section').style.display = 'none';
+            document.getElementById('admin-section').style.display = 'block';
+            loadContent();
+            updateMessagesBadge();
+        } else {
+            showFeedback('login-error', false, data.message || 'Datos incorrectos');
+        }
+    }
+
+    async function logout() {
+        await fetch('../api/logout.php');
+        location.reload();
+    }
+
+    // --- GESTIÓN DE USUARIOS ---
+    // (Omitido por brevedad en los comentarios, pero todo sigue aquí igual)
+    async function registerUser() {
+        const u = document.getElementById('reg_username').value;
+        const p = document.getElementById('reg_password').value;
+        if(!u || !p) { showFeedback('reg_msg', false, 'Rellena ambos campos'); return; }
+
+        const res = await fetch('../api/register.php', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({username: u, password: p}) });
+        const data = await res.json();
+        if(data.success) {
+            showFeedback('reg_msg', true, '¡Usuario registrado con éxito!');
+            document.getElementById('reg_username').value = '';
+            document.getElementById('reg_password').value = '';
+            loadUsers();
+        } else {
+            showFeedback('reg_msg', false, data.message);
+        }
+    }
+
+    async function loadUsers() {
+        const res = await fetch('../api/list_users.php');
+        const data = await res.json();
+        const container = document.getElementById('users-list');
+        container.innerHTML = '';
+        if(data.success && data.data) {
+            data.data.forEach(user => {
+                const isMe = user.is_current ? '<span style="font-size:12px; color:var(--accent);">(Tú)</span>' : '';
+                container.innerHTML += `<div class="user-row"><div class="user-info"><svg class="icon icon-sm" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg> ${escapeHtml(user.username)} ${isMe}</div><div class="user-actions"><button class="btn-inline btn-outline" onclick="promptChangePassword(${user.id}, '${user.username}')"><svg class="icon icon-sm" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 5.25a3 3 0 013 3m3 0a6 6 0 01-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1121.75 8.25z"/></svg> Cambiar Contraseña</button>${!user.is_current ? `<button class="btn-inline btn-danger" onclick="deleteUser(${user.id}, '${user.username}')"><svg class="icon icon-sm" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"/></svg> Eliminar</button>` : ''}</div></div>`;
+            });
+        }
+    }
+
+    async function deleteUser(id, username) {
+        if(!confirm(`¿Estás seguro de que quieres eliminar al usuario "${username}"?`)) return;
+        const res = await fetch('../api/delete_user.php', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({id: id}) });
+        const data = await res.json();
+        if(data.success) { alert("Usuario eliminado"); loadUsers(); } else { alert(data.message); }
+    }
+
+    async function promptChangePassword(id, username) {
+        const newPass = prompt(`Introduce la nueva contraseña para el usuario "${username}":`);
+        if(!newPass) return;
+        if(newPass.length < 6) { alert("La contraseña debe tener al menos 6 caracteres."); return; }
+        const res = await fetch('../api/change_password.php', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({id: id, new_password: newPass}) });
+        const data = await res.json();
+        if(data.success) { alert("Contraseña cambiada correctamente."); } else { alert(data.message); }
+    }
+
+    
+    // --- ESTADÍSTICAS ---
+    let analyticsChartInstance = null;
+
+    async function loadAnalytics() {
+        const res = await fetch('../api/get_analytics.php');
+        const data = await res.json();
+        
+        if (data.success && data.global) {
+            document.getElementById('stat-visits').textContent = data.global.total_visits || '0';
+            
+            let avgTime = Math.round(data.global.avg_time || 0);
+            let timeText = avgTime > 60 ? Math.floor(avgTime / 60) + 'm ' + (avgTime % 60) + 's' : avgTime + 's';
+            document.getElementById('stat-time').textContent = timeText;
+            
+            let bounceRate = data.global.total_visits > 0 
+                ? Math.round((data.global.total_bounces / data.global.total_visits) * 100) 
+                : 0;
+            document.getElementById('stat-bounce').textContent = bounceRate + '%';
+
+            // Top pages
+            let pagesHtml = '';
+            if (data.pages && data.pages.length > 0) {
+                data.pages.forEach(p => {
+                    let pTime = Math.round(p.avg_time || 0);
+                    pagesHtml += `<div class="user-row"><div class="user-info"><svg class="icon icon-sm" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg> ${escapeHtml(p.page)}</div><div style="font-size:14px; color:var(--secondary); display:flex; align-items:center; gap:12px;"><span><svg class="icon icon-sm" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg> ${p.visits} visitas</span><span><svg class="icon icon-sm" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg> Media: ${pTime}s</span></div></div>`;
+                });
+            } else {
+                pagesHtml = '<p>Aún no hay datos de páginas.</p>';
+            }
+            document.getElementById('pages-stats-list').innerHTML = pagesHtml;
+
+            // Render Chart
+            if (data.daily && data.daily.length > 0) {
+                const ctx = document.getElementById('analyticsChart').getContext('2d');
+                
+                let labels = data.daily.map(d => d.date.split('-').slice(1).join('/'));
+                let timeData = data.daily.map(d => Math.round(d.avg_time || 0));
+                let visitsData = data.daily.map(d => d.visits);
+
+                if (analyticsChartInstance) {
+                    analyticsChartInstance.destroy();
+                }
+
+                analyticsChartInstance = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [
+                            {
+                                label: 'Tiempo Medio (segundos)',
+                                data: timeData,
+                                borderColor: '#124634',
+                                backgroundColor: 'rgba(18, 70, 52, 0.1)',
+                                borderWidth: 3,
+                                fill: true,
+                                tension: 0.4,
+                                yAxisID: 'y'
+                            },
+                            {
+                                label: 'Visitas',
+                                data: visitsData,
+                                borderColor: '#F07F29',
+                                backgroundColor: '#F07F29',
+                                borderWidth: 2,
+                                borderDash: [5, 5],
+                                tension: 0.4,
+                                yAxisID: 'y1'
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        interaction: { mode: 'index', intersect: false },
+                        plugins: {
+                            legend: { position: 'top' }
+                        },
+                        scales: {
+                            y: { type: 'linear', display: true, position: 'left', title: {display: true, text: 'Segundos'} },
+                            y1: { type: 'linear', display: true, position: 'right', grid: {drawOnChartArea: false}, title: {display: true, text: 'Visitas'} }
+                        }
+                    }
+                });
+            }
+        }
+    }
+
+    
+    // --- GESTIÓN DE CONFIGURACIÓN DEL FORMULARIO ---
+    async function loadSettings() {
+        const res = await fetch('../api/get_settings.php');
+        const data = await res.json();
+        
+        if (data.success && data.data) {
+            document.getElementById('set_email_to').value = data.data['form_email_to'] || '';
+            document.getElementById('set_reply_subject').value = data.data['form_reply_subject'] || '';
+            document.getElementById('set_reply_message').value = data.data['form_reply_message'] || '';
+        }
+    }
+
+    async function saveSettingItem(key, value) {
+        return fetch('../api/update_setting.php', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({key: key, value: value})
+        });
+    }
+
+    async function saveSettings() {
+        const email = document.getElementById('set_email_to').value;
+        const subject = document.getElementById('set_reply_subject').value;
+        const message = document.getElementById('set_reply_message').value;
+
+        try {
+            await Promise.all([
+                saveSettingItem('form_email_to', email),
+                saveSettingItem('form_reply_subject', subject),
+                saveSettingItem('form_reply_message', message)
+            ]);
+            showFeedback('settings_msg', true, '¡Configuración guardada correctamente!');
+        } catch (e) {
+            showFeedback('settings_msg', false, 'Error al guardar');
+        }
+    }
+
+    // --- GESTIÓN DE EXTENSIONES (ANALYTICS, CLARITY, SCRIPTS) ---
+    async function loadExtensions() {
+        try {
+            const res = await fetch('../api/get_settings.php');
+            const data = await res.json();
+            if (data.success && data.data) {
+                document.getElementById('ext_google_analytics').value = data.data['ext_google_analytics'] || '';
+                document.getElementById('ext_clarity').value = data.data['ext_clarity'] || '';
+                document.getElementById('ext_custom_head').value = data.data['ext_custom_head'] || '';
+                document.getElementById('ext_custom_body_open').value = data.data['ext_custom_body_open'] || '';
+                document.getElementById('ext_custom_body').value = data.data['ext_custom_body'] || '';
+            }
+        } catch (e) { }
+    }
+
+    async function saveExtensions() {
+        const ga = document.getElementById('ext_google_analytics').value.trim();
+        const clarity = document.getElementById('ext_clarity').value.trim();
+        const head = document.getElementById('ext_custom_head').value;
+        const bodyOpen = document.getElementById('ext_custom_body_open').value;
+        const body = document.getElementById('ext_custom_body').value;
+
+        try {
+            await Promise.all([
+                saveSettingItem('ext_google_analytics', ga),
+                saveSettingItem('ext_clarity', clarity),
+                saveSettingItem('ext_custom_head', head),
+                saveSettingItem('ext_custom_body_open', bodyOpen),
+                saveSettingItem('ext_custom_body', body)
+            ]);
+            showFeedback('ext_msg', true, '¡Extensiones y scripts guardados correctamente!');
+        } catch (e) {
+            showFeedback('ext_msg', false, 'Error al guardar extensiones');
+        }
+    }
+
+    // --- GESTIÓN DE MENSAJES / CONTACTOS ---
+    async function updateMessagesBadge() {
+        try {
+            const res = await fetch('../api/get_messages.php');
+            const data = await res.json();
+            if (data.success && data.data) {
+                const badge = document.getElementById('badge-messages-count');
+                if (badge) {
+                    const count = data.data.length;
+                    badge.textContent = count;
+                    badge.style.display = count > 0 ? 'inline-block' : 'none';
+                }
+            }
+        } catch (e) { }
+    }
+
+    async function loadMessages() {
+        const container = document.getElementById('messages-list');
+        const badge = document.getElementById('badge-messages-count');
+        container.innerHTML = '<div class="content-item" style="text-align:center; padding:30px; opacity:0.7;">Cargando mensajes...</div>';
+
+        try {
+            const res = await fetch('../api/get_messages.php');
+            const data = await res.json();
+
+            if (data.success && data.data) {
+                const count = data.data.length;
+                if (badge) {
+                    badge.textContent = count;
+                    badge.style.display = count > 0 ? 'inline-block' : 'none';
+                }
+
+                if (count === 0) {
+                    container.innerHTML = `
+                        <div class="content-item" style="text-align:center; padding:40px 20px;">
+                            <svg class="icon-lg" style="margin: 0 auto 14px auto; display:block; opacity:0.35; stroke-width:1.5;" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 13.5h3.86a2.25 2.25 0 012.012 1.244l.256.512a2.25 2.25 0 002.013 1.244h3.218a2.25 2.25 0 002.013-1.244l.256-.512a2.25 2.25 0 012.013-1.244h3.859m-19.5.375v4.875a2.25 2.25 0 002.25 2.25h15a2.25 2.25 0 002.25-2.25v-4.875m-19.5 0A2.25 2.25 0 014.5 9h15a2.25 2.25 0 012.25 2.25m-19.5 0v-.243a2.25 2.25 0 011.07-1.916l7.5-4.615a2.25 2.25 0 012.36 0l7.5 4.615a2.25 2.25 0 011.07 1.916v.243"/></svg>
+                            <h3 style="color:var(--primary); font-size:20px;">No hay mensajes todavía</h3>
+                            <p style="opacity:0.7; font-size:14px; margin-top:6px; max-width:450px; margin-left:auto; margin-right:auto;">
+                                Cuando un cliente envíe el formulario de contacto de la web ("¿Un Café Sin Prisas?"), quedará registrado aquí automáticamente.
+                            </p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                container.innerHTML = '';
+                data.data.forEach(m => {
+                    const dateObj = new Date(m.created_at);
+                    const dateFormatted = !isNaN(dateObj) 
+                        ? dateObj.toLocaleString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })
+                        : m.created_at;
+
+                    const statusBadge = m.mail_sent == 1
+                        ? '<span style="background:#dcfce7; color:#124634; border:1px solid #86efac; border-radius:12px; padding:3px 10px; font-size:12px; font-weight:600; display:inline-flex; align-items:center; gap:4px;"><svg class="icon icon-sm" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg> Notificación enviada por email</span>'
+                        : '<span style="background:#fef3c7; color:#b45309; border:1px solid #fde68a; border-radius:12px; padding:3px 10px; font-size:12px; font-weight:600; display:inline-flex; align-items:center; gap:4px;"><svg class="icon icon-sm" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/></svg> Guardado en BD (Sin email)</span>';
+
+                    container.innerHTML += `
+                        <div class="content-item">
+                            <header>
+                                <div class="badge-group">
+                                    <span class="page-badge"><svg class="icon icon-sm" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 9v7.5"/></svg> ${dateFormatted}</span>
+                                    ${statusBadge}
+                                </div>
+                                <button class="btn-inline btn-danger" onclick="deleteMessage(${m.id})"><svg class="icon icon-sm" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"/></svg> Eliminar</button>
+                            </header>
+                            <div style="margin-bottom:14px;">
+                                <h3 style="font-size:19px; margin-bottom:6px; color:var(--primary); display:flex; align-items:center;">
+                                    <svg class="icon icon-sm" viewBox="0 0 24 24" style="margin-right:6px;"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg> ${escapeHtml(m.nombre)} ${m.empresa ? `<span style="font-weight:400; opacity:0.8; font-size:15px; margin-left:6px;">— Empresa: <strong>${escapeHtml(m.empresa)}</strong></span>` : ''}
+                                </h3>
+                                <div style="display:flex; flex-wrap:wrap; gap:20px; font-size:15px; margin-top:8px;">
+                                    <div style="display:flex; align-items:center;"><svg class="icon icon-sm" viewBox="0 0 24 24" style="margin-right:5px;"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/></svg> Email: <a href="mailto:${encodeURIComponent(m.email)}" style="color:var(--accent); font-weight:600; text-decoration:none; margin-left:5px;">${escapeHtml(m.email)}</a></div>
+                                    <div style="display:flex; align-items:center;"><svg class="icon icon-sm" viewBox="0 0 24 24" style="margin-right:5px;"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z"/></svg> Teléfono: ${m.telefono ? `<a href="tel:${encodeURIComponent(m.telefono)}" style="color:var(--primary); font-weight:600; text-decoration:none; margin-left:5px;">${escapeHtml(m.telefono)}</a>` : '<span style="opacity:0.6; margin-left:5px;">No indicado</span>'}</div>
+                                </div>
+                            </div>
+                            <div style="background:var(--bg); border:1px solid rgba(18,70,52,0.1); border-radius:8px; padding:12px 16px;">
+                                <div style="font-size:12px; text-transform:uppercase; font-weight:700; color:var(--accent); margin-bottom:4px;">Tema solicitado:</div>
+                                <div style="font-size:15px; font-weight:500;">${escapeHtml(m.tema || 'No especificado')}</div>
+                            </div>
+                        </div>
+                    `;
+                });
+            } else {
+                container.innerHTML = `<div class="content-item feedback-msg error" style="display:block;">Error: ${data.message || 'No se pudieron cargar los mensajes'}</div>`;
+            }
+        } catch (e) {
+            container.innerHTML = `<div class="content-item feedback-msg error" style="display:block;">Error de conexión al cargar mensajes</div>`;
+        }
+    }
+
+    function escapeHtml(text) {
+        if (!text) return '';
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    async function deleteMessage(id) {
+        if (!confirm('¿Estás seguro de que deseas eliminar este contacto del registro?')) return;
+        try {
+            const res = await fetch('../api/delete_message.php', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({id: id})
+            });
+            const data = await res.json();
+            if (data.success) {
+                loadMessages();
+            } else {
+                alert(data.message || 'Error al eliminar');
+            }
+        } catch (e) {
+            alert('Error de conexión al eliminar');
+        }
+    }
+
+    // --- GESTIÓN DE CONTENIDOS ---
+
+
+    let globalContentData = {}; // Cache for filtering
+
+    async function loadContent() {
+        const res = await fetch('../api/get_content.php');
+        const data = await res.json();
+        const container = document.getElementById('content-list');
+        const select = document.getElementById('page-filter');
+        container.innerHTML = '';
+        
+        if(data.success && data.details) {
+            globalContentData = data.details;
+            
+            // Popula el select con las páginas únicas
+            if(data.pages) {
+                const currentFilter = select.value;
+                select.innerHTML = '<option value="all">Todas las páginas</option>';
+                data.pages.forEach(p => {
+                    const opt = document.createElement('option');
+                    opt.value = p;
+                    opt.textContent = `Página: ${p}.html`;
+                    select.appendChild(opt);
+                });
+                select.value = currentFilter; // restaurar el filtro si existía
+            }
+
+            renderContentList();
+        }
+    }
+
+    function renderContentList() {
+        const container = document.getElementById('content-list');
+        const filterValue = document.getElementById('page-filter').value;
+        container.innerHTML = '';
+
+        let count = 0;
+        for (const [id, info] of Object.entries(globalContentData)) {
+            // Filtrar
+            if(filterValue !== 'all' && info.page !== filterValue) {
+                continue;
+            }
+            
+            count++;
+            container.innerHTML += `
+                <div class="content-item">
+                    <header>
+                        <div class="badge-group">
+                            <span class="page-badge"><svg class="icon icon-sm" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg> ${info.page || 'general'}.html</span>
+                            <span class="id-badge">ID: ${id}</span>
+                        </div>
+                        <button class="btn-inline" onclick="saveContent('${id}')">Actualizar</button>
+                    </header>
+                    <div class="form-group" style="margin-bottom:0;">
+                        <textarea id="input_${id}" rows="4">${info.value}</textarea>
+                    </div>
+                    <div id="msg_${id}" class="feedback-msg"></div>
+                </div>
+            `;
+        }
+
+        if(count === 0) {
+            container.innerHTML = '<p style="text-align:center; color:var(--secondary); margin-top:20px;">No hay textos en esta página.</p>';
+        }
+    }
+
+    function filterContent() {
+        renderContentList();
+    }
+
+    async function saveContent(id, isNew = false) {
+        const val = document.getElementById(isNew ? 'new_value' : `input_${id}`).value;
+        const pageVal = isNew ? document.getElementById('new_page').value : '';
+        
+        let bodyData = { id: id, content_value: val };
+        if(isNew && pageVal) { bodyData.page = pageVal; }
+
+        const res = await fetch('../api/update_content.php', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(bodyData)
+        });
+        
+        if(res.status === 401) {
+            alert("Tu sesión ha caducado. Vuelve a iniciar sesión.");
+            location.reload();
+            return;
+        }
+
+        const data = await res.json();
+        if(data.success) {
+            showFeedback(isNew ? 'new_msg' : `msg_${id}`, true, '¡Guardado correctamente!');
+            if(isNew) {
+                document.getElementById('new_id').value = '';
+                document.getElementById('new_value').value = '';
+                document.getElementById('new_page').value = '';
+                loadContent();
+            } else {
+                // Actualizar la cache
+                globalContentData[id].value = val;
+            }
+        } else {
+            showFeedback(isNew ? 'new_msg' : `msg_${id}`, false, data.message);
+        }
+    }
+
+    async function createNewContent() {
+        const id = document.getElementById('new_id').value.trim();
+        if(!id) {
+            showFeedback('new_msg', false, 'El identificador no puede estar vacío');
+            return;
+        }
+        await saveContent(id, true);
+    }
+</script>
+
+</body>
+</html>
