@@ -20,37 +20,145 @@ try {
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )");
 
-    // Stats Globales
-    $stmt = $pdo->query('SELECT COUNT(*) as total_visits, AVG(time_spent) as avg_time, SUM(is_bounce) as total_bounces FROM analytics');
-    $global = $stmt->fetch();
+    $period = isset($_GET['period']) ? trim($_GET['period']) : '7d';
+    $startDate = null;
+    $endDate = null;
 
-    // Stats Diarias (Últimos 7 días activos)
-    $stmt2 = $pdo->query('
-        SELECT DATE(created_at) as date, AVG(time_spent) as avg_time, COUNT(*) as visits, SUM(is_bounce) as bounces 
+    if ($period === '7d') {
+        $startDate = date('Y-m-d', strtotime('-6 days'));
+        $endDate = date('Y-m-d');
+    } elseif ($period === '14d') {
+        $startDate = date('Y-m-d', strtotime('-13 days'));
+        $endDate = date('Y-m-d');
+    } elseif ($period === '30d') {
+        $startDate = date('Y-m-d', strtotime('-29 days'));
+        $endDate = date('Y-m-d');
+    } elseif ($period === 'month') {
+        $startDate = date('Y-m-01');
+        $endDate = date('Y-m-d');
+    } elseif ($period === 'all') {
+        $startDate = null;
+        $endDate = null;
+    } elseif ($period === 'custom') {
+        $customStart = isset($_GET['start_date']) ? trim($_GET['start_date']) : '';
+        $customEnd = isset($_GET['end_date']) ? trim($_GET['end_date']) : '';
+        if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $customStart)) {
+            $startDate = $customStart;
+        }
+        if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $customEnd)) {
+            $endDate = $customEnd;
+        }
+        if ($startDate && $endDate && $startDate > $endDate) {
+            $tmp = $startDate;
+            $startDate = $endDate;
+            $endDate = $tmp;
+        }
+    } else {
+        $period = '7d';
+        $startDate = date('Y-m-d', strtotime('-6 days'));
+        $endDate = date('Y-m-d');
+    }
+
+    $whereParts = [];
+    $params = [];
+
+    if ($startDate) {
+        $whereParts[] = 'created_at >= ?';
+        $params[] = $startDate . ' 00:00:00';
+    }
+    if ($endDate) {
+        $whereParts[] = 'created_at <= ?';
+        $params[] = $endDate . ' 23:59:59';
+    }
+
+    $whereClause = !empty($whereParts) ? 'WHERE ' . implode(' AND ', $whereParts) : '';
+
+    // Stats Globales
+    $stmtGlobal = $pdo->prepare("
+        SELECT 
+            COUNT(*) as total_visits, 
+            COALESCE(AVG(time_spent), 0) as avg_time, 
+            COALESCE(SUM(is_bounce), 0) as total_bounces 
         FROM analytics 
+        $whereClause
+    ");
+    $stmtGlobal->execute($params);
+    $global = $stmtGlobal->fetch(PDO::FETCH_ASSOC);
+
+    // Stats Diarias
+    $stmtDaily = $pdo->prepare("
+        SELECT 
+            DATE(created_at) as date, 
+            COALESCE(AVG(time_spent), 0) as avg_time, 
+            COUNT(*) as visits, 
+            COALESCE(SUM(is_bounce), 0) as bounces 
+        FROM analytics 
+        $whereClause 
         GROUP BY DATE(created_at) 
-        ORDER BY date DESC 
-        LIMIT 7
-    ');
-    $daily = $stmt2->fetchAll();
+        ORDER BY date ASC
+    ");
+    $stmtDaily->execute($params);
+    $dailyRows = $stmtDaily->fetchAll(PDO::FETCH_ASSOC);
+
+    // Rellenar días intermedios con 0 para que la gráfica represente una línea de tiempo continua
+    $daily = [];
+    if ($startDate && $endDate) {
+        $startTs = strtotime($startDate);
+        $endTs = strtotime($endDate);
+        $diffDays = round(($endTs - $startTs) / 86400);
+
+        if ($diffDays >= 0 && $diffDays <= 120) {
+            $byDate = [];
+            foreach ($dailyRows as $r) {
+                $byDate[$r['date']] = $r;
+            }
+            for ($t = $startTs; $t <= $endTs; $t += 86400) {
+                $dStr = date('Y-m-d', $t);
+                if (isset($byDate[$dStr])) {
+                    $daily[] = $byDate[$dStr];
+                } else {
+                    $daily[] = [
+                        'date' => $dStr,
+                        'avg_time' => 0,
+                        'visits' => 0,
+                        'bounces' => 0
+                    ];
+                }
+            }
+        } else {
+            $daily = $dailyRows;
+        }
+    } else {
+        $daily = $dailyRows;
+    }
 
     // Stats por página
-    $stmt3 = $pdo->query('
-        SELECT page, AVG(time_spent) as avg_time, COUNT(*) as visits 
+    $stmtPages = $pdo->prepare("
+        SELECT 
+            page, 
+            COALESCE(AVG(time_spent), 0) as avg_time, 
+            COUNT(*) as visits 
         FROM analytics 
+        $whereClause 
         GROUP BY page 
         ORDER BY visits DESC 
-        LIMIT 5
-    ');
-    $pages = $stmt3->fetchAll();
+        LIMIT 10
+    ");
+    $stmtPages->execute($params);
+    $pages = $stmtPages->fetchAll(PDO::FETCH_ASSOC);
 
     echo json_encode([
         'success' => true, 
         'global' => $global,
-        'daily' => array_reverse($daily),
-        'pages' => $pages
+        'daily' => $daily,
+        'pages' => $pages,
+        'filter' => [
+            'period' => $period,
+            'start_date' => $startDate,
+            'end_date' => $endDate
+        ]
     ]);
 } catch (Exception $e) {
-    echo json_encode(['success' => false, 'message' => 'Error al obtener analíticas']);
+    echo json_encode(['success' => false, 'message' => 'Error al obtener analíticas: ' . $e->getMessage()]);
 }
 ?>
