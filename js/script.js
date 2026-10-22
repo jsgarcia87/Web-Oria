@@ -152,6 +152,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const banner = document.getElementById('cookie-banner');
     const acceptBtn = document.getElementById('accept-cookies');
     
+    // Si el usuario ya aceptó previamente, aseguramos el consentimiento para Microsoft Clarity
+    if (localStorage.getItem('cookiesAccepted') === 'true') {
+        if (typeof window.clarity === 'function') {
+            window.clarity('consent');
+        }
+    }
+
     if (banner && acceptBtn) {
         if (!localStorage.getItem('cookiesAccepted')) {
             banner.style.display = 'flex';
@@ -163,6 +170,9 @@ document.addEventListener('DOMContentLoaded', () => {
         
         acceptBtn.addEventListener('click', () => {
             localStorage.setItem('cookiesAccepted', 'true');
+            if (typeof window.clarity === 'function') {
+                window.clarity('consent');
+            }
             banner.classList.remove('show');
             setTimeout(() => {
                 banner.style.display = 'none';

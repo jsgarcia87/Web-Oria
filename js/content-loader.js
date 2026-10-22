@@ -66,6 +66,10 @@ function applyExtensions(ext) {
             `;
             document.head.appendChild(clarityScript);
         }
+        // Si las cookies ya están aceptadas, enviar consentimiento explícito a Clarity
+        if (localStorage.getItem('cookiesAccepted') === 'true' && typeof window.clarity === 'function') {
+            window.clarity('consent');
+        }
     }
 
     // 3. Scripts personalizados en <head> (Meta Pixel, Tag Manager, etc.)

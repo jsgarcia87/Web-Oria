@@ -279,10 +279,6 @@
                 'Accept': 'application/json'
             },
             body: JSON.stringify({
-                access_key: 'b49cdd4d-245b-40aa-9f36-7e03c1349230',
-                subject: 'Nueva solicitud de café web: ' + tema,
-                from_name: 'Web ORIA',
-                replyto: email,
                 Nombre: nombre,
                 Empresa: empresa,
                 Email: email,
@@ -295,7 +291,7 @@
             return response.json();
         })
         .then(function(data) {
-            if (!data.success) throw new Error('Web3Forms: ' + data.message);
+            if (!data.success) throw new Error(data.message || 'Error al procesar el mensaje');
         })
         .finally(function() { clearTimeout(timer); })
         .then(function() {
